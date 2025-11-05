@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 FastAPI server for LiteLLM 1minAI proxy integration.
-This server provides OpenAI-compatible endpoints for RAG Superbot agents.
+This server provides OpenAI-compatible endpoints for Psychiatry Therapy SuperBot.
 """
 
 import os
