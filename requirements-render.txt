@@ -1,12 +1,12 @@
-# FastAPI server dependencies that were working before
-# Using the exact versions that worked with the original fastapi_server.py
+# FastAPI server dependencies matching the working v2 project
+# Using aiohttp (like v2) instead of httpx for 1minAI API calls
 
 fastapi==0.100.1
 uvicorn[standard]==0.23.2
 pydantic==2.3.0
 python-multipart==0.0.6
-httpx==0.24.1
+aiohttp==3.9.1
 python-dotenv==1.0.0
 
-# Note: Removed aiohttp since fastapi_server.py now uses httpx
-# These versions were working before the simple_server switch
+# Note: Using aiohttp like the working v2 project
+# This is the exact combination that works with your API key

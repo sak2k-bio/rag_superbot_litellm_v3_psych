@@ -139,62 +139,63 @@ async def make_1minai_request(messages: List[ChatMessage], model: str, temperatu
         logger.info(f"Request headers (masked): API-KEY={ONEMINAI_API_KEY[:10]}..., Content-Type=application/json")
         logger.info(f"Using model: {mapped_model}")
         
-        async with httpx.AsyncClient(timeout=60.0) as client:
-            response = await client.post(
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
                 "https://api.1min.ai/api/features",
                 json=payload,
-                headers=headers
-            )
-            logger.info(f"1minAI API response status: {response.status_code}")
-            if response.status_code == 200:
-                result = response.json()
-                logger.info(f"1minAI API request successful for model: {model}")
-                logger.info(f"1minAI API response: {result}")
-                
-                # Parse 1minAI response format
-                ai_record = result.get("aiRecord", {})
-                ai_record_detail = ai_record.get("aiRecordDetail", {})
-                result_object = ai_record_detail.get("resultObject", [])
-                
-                # Extract response text
-                response_text = ""
-                if isinstance(result_object, list) and result_object:
-                    response_text = str(result_object[0])
-                else:
-                    response_text = "No response generated"
-                
-                # Convert to OpenAI format
-                openai_response = {
-                    "id": f"chatcmpl-{int(time.time())}",
-                    "object": "chat.completion",
-                    "created": int(time.time()),
-                    "model": model,
-                    "choices": [
-                        {
-                            "index": 0,
-                            "message": {
-                                "role": "assistant",
-                                "content": response_text
-                            },
-                            "finish_reason": "stop"
+                headers=headers,
+                timeout=aiohttp.ClientTimeout(total=60)
+            ) as response:
+                logger.info(f"1minAI API response status: {response.status}")
+                if response.status == 200:
+                    result = await response.json()
+                    logger.info(f"1minAI API request successful for model: {model}")
+                    logger.info(f"1minAI API response: {result}")
+                    
+                    # Parse 1minAI response format
+                    ai_record = result.get("aiRecord", {})
+                    ai_record_detail = ai_record.get("aiRecordDetail", {})
+                    result_object = ai_record_detail.get("resultObject", [])
+                    
+                    # Extract response text
+                    response_text = ""
+                    if isinstance(result_object, list) and result_object:
+                        response_text = str(result_object[0])
+                    else:
+                        response_text = "No response generated"
+                    
+                    # Convert to OpenAI format
+                    openai_response = {
+                        "id": f"chatcmpl-{int(time.time())}",
+                        "object": "chat.completion",
+                        "created": int(time.time()),
+                        "model": model,
+                        "choices": [
+                            {
+                                "index": 0,
+                                "message": {
+                                    "role": "assistant",
+                                    "content": response_text
+                                },
+                                "finish_reason": "stop"
+                            }
+                        ],
+                        "usage": {
+                            "prompt_tokens": len(prompt.split()),
+                            "completion_tokens": len(response_text.split()),
+                            "total_tokens": len(prompt.split()) + len(response_text.split())
                         }
-                    ],
-                    "usage": {
-                        "prompt_tokens": len(prompt.split()),
-                        "completion_tokens": len(response_text.split()),
-                        "total_tokens": len(prompt.split()) + len(response_text.split())
                     }
-                }
-                
-                return openai_response
-            else:
-                error_text = response.text
-                logger.error(f"1minAI API error: {response.status_code} - {error_text}")
-                raise HTTPException(
-                    status_code=response.status_code,
-                    detail=f"1minAI API error: {error_text}"
-                )
-    except httpx.RequestError as e:
+                    
+                    return openai_response
+                else:
+                    error_text = await response.text()
+                    logger.error(f"1minAI API error: {response.status} - {error_text}")
+                    raise HTTPException(
+                        status_code=response.status,
+                        detail=f"1minAI API error: {error_text}"
+                    )
+    except aiohttp.ClientError as e:
         logger.error(f"1minAI API connection error: {str(e)}")
         raise HTTPException(
             status_code=503,
