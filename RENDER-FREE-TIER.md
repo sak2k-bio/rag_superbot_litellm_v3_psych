@@ -4,16 +4,19 @@ This guide explains how to deploy your Psychiatry Therapy SuperBot to Render's *
 
 ## 🆓 Free Tier Optimizations
 
-### Issue: Docker Compilation Errors
-The original Docker approach failed because:
+### Issue: Compilation Errors
+The original approach failed because:
 - `pydantic-core` requires Rust compilation
+- `aiohttp` requires C extension compilation
+- Python 3.13 has compatibility issues with older packages
 - Render's free tier has limited build resources
-- Read-only filesystem restrictions
 
-### Solution: Python Runtime
-Instead of Docker, we use Render's **Python 3 runtime**:
+### Solution: Optimized Python Runtime
+Instead of Docker, we use Render's **Python 3.11 runtime**:
 - ✅ No Docker compilation needed
-- ✅ Pre-compiled Python packages
+- ✅ Pre-compiled Python packages (older, stable versions)
+- ✅ Python 3.11.9 (avoids 3.13 compatibility issues)
+- ✅ Replaced aiohttp with httpx (no C extensions)
 - ✅ Faster builds on free tier
 - ✅ Same functionality
 
@@ -51,8 +54,15 @@ pydantic==2.5.0  # ❌ Requires Rust compilation
 ### Free Tier Requirements (Pre-compiled)
 ```txt
 # requirements-render.txt (free tier compatible)
-fastapi==0.100.1
-pydantic==1.10.12  # ✅ Pre-compiled wheels available
+fastapi==0.88.0
+pydantic==1.10.7  # ✅ Pre-compiled wheels available
+httpx==0.23.3     # ✅ Replaces aiohttp (no C extensions)
+```
+
+### Python Version Lock
+```txt
+# runtime.txt (forces Python 3.11.9)
+python-3.11.9
 ```
 
 ## 🚀 Deployment Process
@@ -60,7 +70,8 @@ pydantic==1.10.12  # ✅ Pre-compiled wheels available
 ### 1. Files Used
 - `render.yaml` - Python runtime configuration
 - `requirements-render.txt` - Free tier compatible dependencies
-- `fastapi_server.py` - Same FastAPI server (no changes needed)
+- `runtime.txt` - Specifies Python 3.11.9 (avoids 3.13 issues)
+- `fastapi_server.py` - Updated to use httpx instead of aiohttp
 
 ### 2. Build Process
 ```bash
@@ -155,8 +166,10 @@ When ready to upgrade:
 
 - [x] ✅ Use `render.yaml` with `env: python3`
 - [x] ✅ Use `requirements-render.txt` for dependencies
+- [x] ✅ Create `runtime.txt` with `python-3.11.9`
 - [x] ✅ Set `plan: free` in render.yaml
 - [x] ✅ Keep build command simple
+- [x] ✅ Replace aiohttp with httpx in code
 - [x] ✅ Set secrets in Render dashboard
 - [x] ✅ Test locally first
 

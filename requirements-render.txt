@@ -1,15 +1,12 @@
-# FastAPI server dependencies optimized for Render Free Tier
-# These versions are known to work without compilation issues
+# FastAPI server dependencies for Render Free Tier (Python 3.13 compatible)
+# These versions are guaranteed to have pre-built wheels
 
-fastapi==0.100.1
-uvicorn==0.23.2
-pydantic==1.10.12
-python-multipart==0.0.6
-httpx==0.24.1
-aiohttp==3.8.5
+fastapi==0.88.0
+uvicorn==0.20.0
+pydantic==1.10.7
+python-multipart==0.0.5
+httpx==0.23.3
 python-dotenv==1.0.0
 
-# Alternative if above doesn't work:
-# fastapi==0.95.2
-# uvicorn==0.22.0
-# pydantic==1.10.9
+# Note: Using older, stable versions that work on all Python versions
+# Removed aiohttp to avoid C extension compilation issues

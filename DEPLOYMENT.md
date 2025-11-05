@@ -311,10 +311,17 @@ Error: Service not responding on expected port
 #### 5. Free Tier Compilation Issues
 ```
 Error: pydantic-core compilation failed / Rust compilation error
+Error: aiohttp compilation failed / C extension error
 ```
-**Solution**: Use `requirements-render.txt` with pre-compiled packages and Python runtime instead of Docker
+**Solution**: Use `requirements-render.txt` with pre-compiled packages and Python 3.11 runtime
 
-#### 6. Memory Issues on Free Tier
+#### 6. Python Version Issues
+```
+Error: PyLongObject has no member named 'ob_digit'
+```
+**Solution**: Use `runtime.txt` to specify Python 3.11.9 instead of 3.13
+
+#### 7. Memory Issues on Free Tier
 ```
 Error: Build killed / Out of memory
 ```

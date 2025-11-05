@@ -9,7 +9,7 @@ services:
     plan: free  # Free tier
     region: oregon  # Choose region closest to your users
     branch: main
-    buildCommand: "pip install -r requirements-render.txt"
+    buildCommand: "pip install --upgrade pip && pip install -r requirements-render.txt"
     startCommand: "python fastapi_server.py"
     healthCheckPath: /health
     
