@@ -1,0 +1,5 @@
+# Minimal requirements for Render Free Tier (Python 3.13 compatible)
+# Uses only built-in Python modules to avoid dependency conflicts
+
+# No external dependencies needed!
+# The simple_server.py uses only Python standard library

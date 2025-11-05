@@ -109,9 +109,9 @@ All other environment variables are already set in `render.yaml`.
 
 **What happens during Render deployment:**
 - Render reads your `render.yaml` Blueprint configuration
-- Uses Python 3 runtime (optimized for free tier, avoids Docker compilation issues)
-- Runs `pip install -r requirements-render.txt` to install dependencies
-- Starts the server with `python fastapi_server.py`
+- Uses Python 3 runtime (optimized for free tier, no external dependencies)
+- No pip install needed - uses Python standard library only
+- Starts the server with `python simple_server.py`
 - Sets up environment variables (same as your docker-compose.yml)
 - Deploys with automatic HTTPS, scaling, and zero-downtime deployments
 
