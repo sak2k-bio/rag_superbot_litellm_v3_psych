@@ -80,31 +80,33 @@ def make_1minai_request(messages, model="gemini-2.0-flash-lite"):
     }
     
     try:
-        # Make request using urllib
+        # Make request using urllib (matching v2 project format exactly)
         data = json.dumps(payload).encode('utf-8')
         req = urllib.request.Request(url, data=data, headers=headers)
         
-        logger.info(f"Making request to 1minAI API...")
-        logger.info(f"Request URL: {url}")
-        logger.info(f"Request headers: API-KEY={ONEMINAI_API_KEY[:10] if ONEMINAI_API_KEY else 'None'}..., Content-Type=application/json")
+        logger.info(f"Making request to: https://api.1min.ai/api/features")
+        logger.info(f"Request payload: {payload}")
+        logger.info(f"Request headers (masked): API-KEY={ONEMINAI_API_KEY[:10] if ONEMINAI_API_KEY else 'None'}..., Content-Type=application/json")
+        logger.info(f"Using model: {mapped_model}")
         
         with urllib.request.urlopen(req, timeout=60) as response:
             logger.info(f"1minAI API response status: {response.status}")
             if response.status == 200:
                 result = json.loads(response.read().decode('utf-8'))
-                logger.info(f"1minAI API response received successfully")
+                logger.info(f"1minAI API request successful for model: {model}")
+                logger.info(f"1minAI API response: {result}")
                 
-                # Parse 1minAI response format
+                # Parse 1minAI response format (exact same as v2)
                 ai_record = result.get("aiRecord", {})
                 ai_record_detail = ai_record.get("aiRecordDetail", {})
                 result_object = ai_record_detail.get("resultObject", [])
                 
-                # Extract response text
+                # Extract response text (exact same as v2)
                 response_text = ""
                 if isinstance(result_object, list) and result_object:
                     response_text = str(result_object[0])
                 else:
-                    response_text = "I apologize, but I couldn't generate a response at this time."
+                    response_text = "No response generated"
                 
                 return response_text
             else:
@@ -115,24 +117,7 @@ def make_1minai_request(messages, model="gemini-2.0-flash-lite"):
     except urllib.error.HTTPError as e:
         error_body = e.read().decode('utf-8') if hasattr(e, 'read') else str(e)
         logger.error(f"1minAI API HTTP error: {e.code} - {error_body}")
-        if e.code == 403:
-            logger.error("403 Forbidden - API key may be invalid or expired")
-            # Fallback response for authentication issues
-            return """Hello! I'm your Psychiatry Therapy SuperBot. 
-
-I'm currently experiencing connectivity issues with my AI service (1minAI API key may be expired or invalid). 
-
-However, I can still provide some general mental health guidance:
-
-• **For anxiety**: Try deep breathing exercises (4-7-8 technique)
-• **For stress**: Practice mindfulness and grounding techniques
-• **For depression**: Maintain daily routines and social connections
-• **Crisis support**: Contact a mental health professional or crisis hotline
-
-Please consider getting a new API key from https://1min.ai or contact support for assistance.
-
-What specific mental health topic would you like to discuss?"""
-        return "I'm experiencing some technical difficulties connecting to my AI service. However, I'm still here to help with your mental health concerns. Please feel free to share what's troubling you."
+        return f"1minAI API is currently unavailable (Error: {e.code}). Please check the API configuration."
     except urllib.error.URLError as e:
         logger.error(f"1minAI API connection error: {str(e)}")
         return "I'm currently unable to connect to my AI service. Please try again later."

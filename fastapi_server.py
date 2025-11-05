@@ -11,7 +11,7 @@ import time
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 import json
-import httpx
+import aiohttp
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
