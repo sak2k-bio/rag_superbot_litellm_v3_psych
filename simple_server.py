@@ -72,7 +72,7 @@ def make_1minai_request(messages, model="gemini-2.0-flash-lite"):
         }
     }
     
-    # Prepare request
+    # Prepare request (same as original FastAPI server)
     url = "https://api.1min.ai/api/features"
     headers = {
         "API-KEY": ONEMINAI_API_KEY,
@@ -116,9 +116,23 @@ def make_1minai_request(messages, model="gemini-2.0-flash-lite"):
         error_body = e.read().decode('utf-8') if hasattr(e, 'read') else str(e)
         logger.error(f"1minAI API HTTP error: {e.code} - {error_body}")
         if e.code == 403:
-            logger.error("403 Forbidden - Check if ONEMINAI_API_KEY is set correctly in Render dashboard")
-            return "Authentication failed. Please check API key configuration."
-        return f"API error ({e.code}). Please try again later."
+            logger.error("403 Forbidden - API key may be invalid or expired")
+            # Fallback response for authentication issues
+            return """Hello! I'm your Psychiatry Therapy SuperBot. 
+
+I'm currently experiencing connectivity issues with my AI service (1minAI API key may be expired or invalid). 
+
+However, I can still provide some general mental health guidance:
+
+• **For anxiety**: Try deep breathing exercises (4-7-8 technique)
+• **For stress**: Practice mindfulness and grounding techniques
+• **For depression**: Maintain daily routines and social connections
+• **Crisis support**: Contact a mental health professional or crisis hotline
+
+Please consider getting a new API key from https://1min.ai or contact support for assistance.
+
+What specific mental health topic would you like to discuss?"""
+        return "I'm experiencing some technical difficulties connecting to my AI service. However, I'm still here to help with your mental health concerns. Please feel free to share what's troubling you."
     except urllib.error.URLError as e:
         logger.error(f"1minAI API connection error: {str(e)}")
         return "I'm currently unable to connect to my AI service. Please try again later."

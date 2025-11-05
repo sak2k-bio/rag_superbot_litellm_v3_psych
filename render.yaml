@@ -9,8 +9,8 @@ services:
     plan: free  # Free tier
     region: oregon  # Choose region closest to your users
     branch: main
-    buildCommand: "echo 'No dependencies needed - using Python standard library only'"
-    startCommand: "python simple_server.py"
+    buildCommand: "pip install --upgrade pip && pip install -r requirements-render.txt"
+    startCommand: "python fastapi_server.py"
     healthCheckPath: /health
     
     # Environment Variables (same as docker-compose.yml)

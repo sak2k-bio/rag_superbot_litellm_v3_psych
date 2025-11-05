@@ -1,12 +1,12 @@
-# FastAPI server dependencies for Render Free Tier (Minimal, Python 3.13 compatible)
-# Using the absolute minimum versions that work reliably
+# FastAPI server dependencies that were working before
+# Using the exact versions that worked with the original fastapi_server.py
 
-fastapi==0.104.1
-uvicorn==0.24.0
-pydantic==2.5.0
+fastapi==0.100.1
+uvicorn[standard]==0.23.2
+pydantic==2.3.0
 python-multipart==0.0.6
-httpx==0.25.2
+httpx==0.24.1
 python-dotenv==1.0.0
 
-# Note: These versions are tested to work together on Python 3.13
-# Minimal set to avoid dependency conflicts
+# Note: Removed aiohttp since fastapi_server.py now uses httpx
+# These versions were working before the simple_server switch
