@@ -4,18 +4,18 @@ This guide explains how to deploy your Psychiatry Therapy SuperBot to Render's *
 
 ## 🆓 Free Tier Optimizations
 
-### Issue: Compilation Errors
+### Issue: Compilation & Compatibility Errors
 The original approach failed because:
 - `pydantic-core` requires Rust compilation
-- `aiohttp` requires C extension compilation
-- Python 3.13 has compatibility issues with older packages
+- `aiohttp` requires C extension compilation  
+- Older package versions have Python 3.13 compatibility issues
 - Render's free tier has limited build resources
 
 ### Solution: Optimized Python Runtime
-Instead of Docker, we use Render's **Python 3.11 runtime**:
+Instead of Docker, we use Render's **Python 3.13 runtime** with compatible packages:
 - ✅ No Docker compilation needed
-- ✅ Pre-compiled Python packages (older, stable versions)
-- ✅ Python 3.11.9 (avoids 3.13 compatibility issues)
+- ✅ Latest package versions with Python 3.13 compatibility
+- ✅ Pre-compiled wheels for all dependencies
 - ✅ Replaced aiohttp with httpx (no C extensions)
 - ✅ Faster builds on free tier
 - ✅ Same functionality
@@ -51,19 +51,17 @@ fastapi==0.104.1
 pydantic==2.5.0  # ❌ Requires Rust compilation
 ```
 
-### Free Tier Requirements (Pre-compiled)
+### Free Tier Requirements (Python 3.13 Compatible)
 ```txt
-# requirements-render.txt (free tier compatible)
-fastapi==0.88.0
-pydantic==1.10.7  # ✅ Pre-compiled wheels available
-httpx==0.23.3     # ✅ Replaces aiohttp (no C extensions)
+# requirements-render.txt (Python 3.13 compatible)
+fastapi==0.115.0
+pydantic==2.9.2   # ✅ Python 3.13 compatible
+httpx==0.27.2     # ✅ Replaces aiohttp (no C extensions)
+uvicorn==0.32.0   # ✅ Latest stable version
 ```
 
-### Python Version Lock
-```txt
-# runtime.txt (forces Python 3.11.9)
-python-3.11.9
-```
+### Python Version (Render Default)
+Render uses Python 3.13 by default, so we use packages compatible with it.
 
 ## 🚀 Deployment Process
 
@@ -166,7 +164,7 @@ When ready to upgrade:
 
 - [x] ✅ Use `render.yaml` with `env: python3`
 - [x] ✅ Use `requirements-render.txt` for dependencies
-- [x] ✅ Create `runtime.txt` with `python-3.11.9`
+- [x] ✅ Use Python 3.13 compatible package versions
 - [x] ✅ Set `plan: free` in render.yaml
 - [x] ✅ Keep build command simple
 - [x] ✅ Replace aiohttp with httpx in code

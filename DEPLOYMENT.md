@@ -317,9 +317,9 @@ Error: aiohttp compilation failed / C extension error
 
 #### 6. Python Version Issues
 ```
-Error: PyLongObject has no member named 'ob_digit'
+Error: ForwardRef._evaluate() missing 1 required keyword-only argument
 ```
-**Solution**: Use `runtime.txt` to specify Python 3.11.9 instead of 3.13
+**Solution**: Use newer package versions that are Python 3.13 compatible in `requirements-render.txt`
 
 #### 7. Memory Issues on Free Tier
 ```
