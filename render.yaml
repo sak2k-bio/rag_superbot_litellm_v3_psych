@@ -1,0 +1,50 @@
+# Render Blueprint for Psychiatry Therapy SuperBot
+# This file defines how to deploy your docker-compose setup to Render
+
+services:
+  # FastAPI LiteLLM Proxy Service
+  - type: web
+    name: psychiatry-therapy-superbot-api
+    env: docker
+    dockerfilePath: ./Dockerfile.fastapi
+    plan: starter  # Can upgrade to standard/pro as needed
+    region: oregon  # Choose region closest to your users
+    branch: main
+    buildCommand: ""  # Docker build handled automatically
+    startCommand: "python fastapi_server.py"
+    healthCheckPath: /health
+    
+    # Environment Variables (same as docker-compose.yml)
+    envVars:
+      - key: FASTAPI_HOST
+        value: "0.0.0.0"
+      - key: FASTAPI_PORT
+        value: "10000"  # Render uses port 10000
+      - key: FASTAPI_RELOAD
+        value: "false"
+      - key: FASTAPI_LOG_LEVEL
+        value: "info"
+      - key: LITELLM_BASE_URL
+        value: "https://api.1min.ai"
+      - key: DEFAULT_MODEL
+        value: "gemini-2.0-flash-lite"
+      - key: MAX_TOKENS
+        value: "4096"
+      - key: TEMPERATURE
+        value: "0.7"
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: CORS_ALLOW_CREDENTIALS
+        value: "true"
+      - key: HEALTH_CHECK_INTERVAL
+        value: "30"
+      # Secret environment variables (set in Render dashboard)
+      - key: ONEMINAI_API_KEY
+        sync: false  # This will be set as a secret in Render dashboard
+
+    # Auto-deploy on git push
+    autoDeploy: true
+    
+    # Custom domains (optional)
+    # domains:
+    #   - psychiatry-therapy-superbot-api.yourdomain.com

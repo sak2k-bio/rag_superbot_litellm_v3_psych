@@ -1,0 +1,30 @@
+# Railway Environment Variables Template
+# Set these in your Railway dashboard or via CLI
+
+# 1minAI API Configuration
+ONEMINAI_API_KEY=your_1minai_api_key_here
+
+# FastAPI Server Configuration
+FASTAPI_HOST=0.0.0.0
+FASTAPI_PORT=8000
+FASTAPI_RELOAD=false
+FASTAPI_LOG_LEVEL=info
+
+# LiteLLM Configuration
+LITELLM_BASE_URL=https://api.1min.ai
+DEFAULT_MODEL=gemini-2.0-flash-lite
+MAX_TOKENS=4096
+TEMPERATURE=0.7
+
+# CORS Configuration
+CORS_ORIGINS=*
+CORS_ALLOW_CREDENTIALS=true
+
+# Health Check Configuration
+HEALTH_CHECK_INTERVAL=30
+
+# Set these via Railway CLI:
+# railway variables set ONEMINAI_API_KEY=your_key_here
+# railway variables set FASTAPI_HOST=0.0.0.0
+# railway variables set FASTAPI_PORT=8000
+# railway variables set CORS_ORIGINS=*

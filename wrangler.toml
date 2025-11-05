@@ -1,0 +1,27 @@
+# Cloudflare Workers configuration for Psychiatry Therapy SuperBot LiteLLM Proxy
+name = "psychiatry-therapy-superbot-api"
+main = "src/worker.js"
+compatibility_date = "2024-11-05"
+compatibility_flags = ["nodejs_compat"]
+
+# Variables available to the worker
+[vars]
+CORS_ORIGINS = "*"
+CORS_ALLOW_CREDENTIALS = "true"
+DEFAULT_MODEL = "gemini-2.0-flash-lite"
+MAX_TOKENS = "4096"
+TEMPERATURE = "0.7"
+LITELLM_BASE_URL = "https://api.1min.ai"
+
+# Production environment
+[env.production]
+name = "psychiatry-therapy-superbot-api"
+vars = { ENVIRONMENT = "production" }
+
+# Staging environment  
+[env.staging]
+name = "psychiatry-therapy-superbot-api-staging"
+vars = { ENVIRONMENT = "staging" }
+
+# Secrets to be set via CLI:
+# wrangler secret put ONEMINAI_API_KEY

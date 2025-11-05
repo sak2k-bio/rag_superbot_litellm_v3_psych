@@ -1,0 +1,40 @@
+# Render-equivalent Docker Compose for Psychiatry Therapy SuperBot
+# This shows how your docker-compose.yml translates to Render deployment
+
+version: '3.8'
+
+services:
+  # FastAPI server for LiteLLM 1minAI proxy (Render deployment equivalent)
+  fastapi-litellm:
+    build:
+      context: .
+      dockerfile: Dockerfile.fastapi  # Render uses the same Dockerfile
+    container_name: psychiatry-therapy-superbot-api
+    ports:
+      - "${PORT:-10000}:10000"  # Render uses PORT env var (default 10000)
+    environment:
+      # Same environment variables as original docker-compose.yml
+      - ONEMINAI_API_KEY=${ONEMINAI_API_KEY}
+      - FASTAPI_HOST=0.0.0.0
+      - FASTAPI_PORT=${PORT:-10000}  # Render uses PORT instead of 8000
+      - FASTAPI_RELOAD=false
+      - FASTAPI_LOG_LEVEL=info
+      - LITELLM_BASE_URL=https://api.1min.ai
+      - DEFAULT_MODEL=gemini-2.0-flash-lite
+      - MAX_TOKENS=4096
+      - TEMPERATURE=0.7
+      - CORS_ORIGINS=*
+      - CORS_ALLOW_CREDENTIALS=true
+      - HEALTH_CHECK_INTERVAL=30
+      # Render-specific
+      - PORT=${PORT:-10000}
+      - RENDER_SERVICE_NAME=psychiatry-therapy-superbot-api
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT:-10000}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+# Note: Render handles networking, SSL, and scaling automatically

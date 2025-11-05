@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "buildCommand": "cd frontend && npm run build",
+  "outputDirectory": "frontend/.next",
+  "installCommand": "cd frontend && npm install --legacy-peer-deps",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_APP_NAME": "Psychiatry Therapy SuperBot",
+      "NEXT_PUBLIC_APP_VERSION": "1.0.0",
+      "NEXT_PUBLIC_USE_LITELLM": "true"
+    }
+  },
+  "functions": {
+    "frontend/src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
+  ]
+}

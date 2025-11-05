@@ -1,0 +1,32 @@
+# Production Environment Variables for Vercel Deployment
+# Copy these to your Vercel dashboard under Settings > Environment Variables
+
+# LiteLLM / Render Configuration (Primary)
+NEXT_PUBLIC_USE_LITELLM=true
+NEXT_PUBLIC_LITELLM_API_URL=https://psychiatry-therapy-superbot-api.onrender.com
+NEXT_PUBLIC_LITELLM_MODEL=gemini-2.0-flash-lite
+NEXT_PUBLIC_LITELLM_TEMPERATURE=0.7
+NEXT_PUBLIC_LITELLM_MAX_TOKENS=2048
+
+# Google Gemini Configuration (Fallback/Embeddings only)
+NEXT_PUBLIC_GOOGLE_API_KEY=your_gemini_api_key_here
+NEXT_PUBLIC_GEMINI_MODEL=gemini-2.5-flash
+NEXT_PUBLIC_GEMINI_TEMPERATURE=0.7
+NEXT_PUBLIC_GEMINI_MAX_TOKENS=2048
+NEXT_PUBLIC_EMBEDDING_MODEL=gemini-embedding-001
+NEXT_PUBLIC_EMBEDDING_DIM=3072
+
+# Qdrant Cloud Configuration
+NEXT_PUBLIC_QDRANT_CLOUD_URL=your_qdrant_cloud_url_here
+NEXT_PUBLIC_QDRANT_CLOUD_API_KEY=your_qdrant_cloud_api_key_here
+
+# Vector Store Configuration
+NEXT_PUBLIC_VECTOR_STORE=qdrant
+NEXT_PUBLIC_COLLECTION_NAME=psychiatry_therapy_v1_google-001
+
+# App Configuration
+NEXT_PUBLIC_APP_NAME=Psychiatry Therapy SuperBot
+NEXT_PUBLIC_APP_VERSION=1.0.0
+
+# Production Settings
+NODE_ENV=production

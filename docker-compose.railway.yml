@@ -1,0 +1,40 @@
+# Railway-optimized Docker Compose for Psychiatry Therapy SuperBot
+# This file shows the equivalent configuration that Railway will use
+
+version: '3.8'
+
+services:
+  # FastAPI server for LiteLLM 1minAI proxy (Railway deployment)
+  fastapi-litellm:
+    build:
+      context: .
+      dockerfile: Dockerfile.fastapi
+    container_name: psychiatry-therapy-superbot-api
+    ports:
+      - "${PORT:-8000}:8000"  # Railway uses PORT env var
+    environment:
+      # Railway will inject these from environment variables
+      - ONEMINAI_API_KEY=${ONEMINAI_API_KEY}
+      - FASTAPI_HOST=0.0.0.0
+      - FASTAPI_PORT=8000
+      - FASTAPI_RELOAD=false
+      - FASTAPI_LOG_LEVEL=info
+      - LITELLM_BASE_URL=https://api.1min.ai
+      - DEFAULT_MODEL=gemini-2.0-flash-lite
+      - MAX_TOKENS=4096
+      - TEMPERATURE=0.7
+      - CORS_ORIGINS=*
+      - CORS_ALLOW_CREDENTIALS=true
+      - HEALTH_CHECK_INTERVAL=30
+      # Railway-specific
+      - PORT=${PORT:-8000}
+      - RAILWAY_ENVIRONMENT=${RAILWAY_ENVIRONMENT:-production}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+# Note: Railway handles networking automatically, no custom networks needed
