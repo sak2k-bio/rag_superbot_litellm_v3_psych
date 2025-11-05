@@ -160,7 +160,7 @@ Go to your Vercel dashboard and add these environment variables:
 ```bash
 # LiteLLM Configuration (Primary)
 NEXT_PUBLIC_USE_LITELLM=true
-NEXT_PUBLIC_LITELLM_API_URL=https://psychiatry-therapy-superbot-api.onrender.com
+NEXT_PUBLIC_LITELLM_API_URL=https://rag-superbot-litellm-v3-psych.onrender.com
 NEXT_PUBLIC_LITELLM_MODEL=gemini-2.0-flash-lite
 NEXT_PUBLIC_LITELLM_TEMPERATURE=0.7
 NEXT_PUBLIC_LITELLM_MAX_TOKENS=2048
@@ -210,7 +210,7 @@ Make sure your frontend is pointing to the correct Render URL:
 
 ```javascript
 // In your frontend code, the NEXT_PUBLIC_LITELLM_API_URL should be:
-const LITELLM_API_URL = process.env.NEXT_PUBLIC_LITELLM_API_URL || 'https://psychiatry-therapy-superbot-api.onrender.com';
+const LITELLM_API_URL = process.env.NEXT_PUBLIC_LITELLM_API_URL || 'https://rag-superbot-litellm-v3-psych.onrender.com';
 ```
 
 ### 3.2 Test End-to-End Flow

@@ -1,8 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "cd frontend && npm run build",
-  "outputDirectory": "frontend/.next",
-  "installCommand": "cd frontend && npm install --legacy-peer-deps",
   "env": {
     "NODE_ENV": "production"
   },
@@ -14,7 +11,7 @@
     }
   },
   "functions": {
-    "frontend/src/app/api/**/*.ts": {
+    "src/app/api/**/*.ts": {
       "maxDuration": 30
     }
   },

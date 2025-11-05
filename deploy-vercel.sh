@@ -17,12 +17,6 @@ if ! vercel whoami &> /dev/null; then
     exit 1
 fi
 
-# Navigate to frontend directory
-cd frontend || {
-    echo "❌ Frontend directory not found!"
-    exit 1
-}
-
 # Install dependencies
 echo "📦 Installing dependencies..."
 npm install --legacy-peer-deps
