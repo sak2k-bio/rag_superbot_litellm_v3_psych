@@ -84,9 +84,15 @@ def make_1minai_request(messages, model="gemini-2.0-flash-lite"):
         data = json.dumps(payload).encode('utf-8')
         req = urllib.request.Request(url, data=data, headers=headers)
         
+        logger.info(f"Making request to 1minAI API...")
+        logger.info(f"Request URL: {url}")
+        logger.info(f"Request headers: API-KEY={ONEMINAI_API_KEY[:10] if ONEMINAI_API_KEY else 'None'}..., Content-Type=application/json")
+        
         with urllib.request.urlopen(req, timeout=60) as response:
+            logger.info(f"1minAI API response status: {response.status}")
             if response.status == 200:
                 result = json.loads(response.read().decode('utf-8'))
+                logger.info(f"1minAI API response received successfully")
                 
                 # Parse 1minAI response format
                 ai_record = result.get("aiRecord", {})
@@ -106,6 +112,13 @@ def make_1minai_request(messages, model="gemini-2.0-flash-lite"):
                 logger.error(f"1minAI API error: {response.status} - {error_text}")
                 return "I'm experiencing technical difficulties. Please try again later."
                 
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode('utf-8') if hasattr(e, 'read') else str(e)
+        logger.error(f"1minAI API HTTP error: {e.code} - {error_body}")
+        if e.code == 403:
+            logger.error("403 Forbidden - Check if ONEMINAI_API_KEY is set correctly in Render dashboard")
+            return "Authentication failed. Please check API key configuration."
+        return f"API error ({e.code}). Please try again later."
     except urllib.error.URLError as e:
         logger.error(f"1minAI API connection error: {str(e)}")
         return "I'm currently unable to connect to my AI service. Please try again later."
@@ -314,6 +327,12 @@ class SimpleHandler(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     logger.info(f"Starting Psychiatry Therapy SuperBot API on port {PORT}")
     logger.info(f"1minAI API Key configured: {bool(ONEMINAI_API_KEY)}")
+    if ONEMINAI_API_KEY:
+        logger.info(f"API Key length: {len(ONEMINAI_API_KEY)} characters")
+        logger.info(f"API Key starts with: {ONEMINAI_API_KEY[:10]}...")
+    else:
+        logger.warning("⚠️  ONEMINAI_API_KEY environment variable not set!")
+        logger.warning("Please set it in Render dashboard under Environment tab")
     
     server = HTTPServer(('0.0.0.0', PORT), SimpleHandler)
     
