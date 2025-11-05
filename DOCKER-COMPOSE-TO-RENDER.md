@@ -56,6 +56,7 @@ services:
 | `networks` | Auto-managed | Render handles networking + SSL |
 | `restart: unless-stopped` | Built-in | Render auto-restarts on failure |
 | Manual SSL setup | Automatic HTTPS | Render provides free SSL certificates |
+| `command` in docker-compose | `CMD` in Dockerfile | Render uses Dockerfile CMD, no startCommand |
 
 ## 🌐 Environment Variables
 

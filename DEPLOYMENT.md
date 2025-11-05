@@ -108,6 +108,7 @@ All other environment variables are already set in `render.yaml`.
 **What happens during Render deployment:**
 - Render reads your `render.yaml` Blueprint configuration
 - Builds the Docker image using `Dockerfile.fastapi` (same as docker-compose)
+- Uses the `CMD` instruction from Dockerfile (no separate startCommand needed)
 - Sets up environment variables (same as your docker-compose.yml)
 - Deploys with automatic HTTPS, scaling, and zero-downtime deployments
 
@@ -291,6 +292,18 @@ Error: CORS policy blocked
 Error: ONEMINAI_API_KEY not configured
 ```
 **Solution**: Ensure environment variable is set in Render dashboard under Environment tab
+
+#### 3. Render Blueprint Issues
+```
+Error: docker runtime must not have startCommand
+```
+**Solution**: Remove `startCommand` from render.yaml - Render uses the `CMD` from Dockerfile
+
+#### 4. Port Issues
+```
+Error: Service not responding on expected port
+```
+**Solution**: Ensure your app listens on `PORT` environment variable (Render sets this to 10000)
 
 #### 3. Environment Variables Not Loading
 ```

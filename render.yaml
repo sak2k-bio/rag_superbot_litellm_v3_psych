@@ -10,8 +10,6 @@ services:
     plan: starter  # Can upgrade to standard/pro as needed
     region: oregon  # Choose region closest to your users
     branch: main
-    buildCommand: ""  # Docker build handled automatically
-    startCommand: "python fastapi_server.py"
     healthCheckPath: /health
     
     # Environment Variables (same as docker-compose.yml)

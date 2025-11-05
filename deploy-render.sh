@@ -114,7 +114,8 @@ else
     echo "🔍 Check the Render dashboard for deployment logs"
     echo "💡 Common issues:"
     echo "  - Make sure you're logged in: render auth login"
-    echo "  - Check render.yaml syntax"
+    echo "  - Check render.yaml syntax (no startCommand with Docker runtime)"
     echo "  - Ensure git repository is properly set up"
+    echo "  - Verify ONEMINAI_API_KEY is set in Render dashboard"
     exit 1
 fi
