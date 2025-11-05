@@ -1,8 +1,8 @@
-# FastAPI server dependencies for LiteLLM 1minAI proxy
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
-pydantic==2.5.0
+# FastAPI server dependencies for LiteLLM 1minAI proxy (Render Free Tier Compatible)
+fastapi==0.100.1
+uvicorn[standard]==0.23.2
+pydantic==2.3.0
 python-multipart==0.0.6
-httpx==0.25.2
-aiohttp==3.9.1
+httpx==0.24.1
+aiohttp==3.8.5
 python-dotenv==1.0.0

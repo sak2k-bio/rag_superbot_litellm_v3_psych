@@ -16,14 +16,16 @@ This guide covers deploying the Psychiatry Therapy SuperBot with:
 
 ## 🐳 Docker Compose to Render
 
-Render deploys your **exact docker-compose configuration** in the cloud:
-- ✅ Same `Dockerfile.fastapi` 
+Render deploys your **FastAPI server** in the cloud with free tier optimizations:
+- ✅ Python 3 runtime (free tier compatible, no compilation issues)
 - ✅ Same environment variables (with PORT=10000 for Render)
-- ✅ Same FastAPI server
+- ✅ Same FastAPI server functionality
 - ✅ Same health checks
 - ✅ **Plus** auto-scaling, SSL, monitoring, and zero-downtime deployments
 
-See [DOCKER-COMPOSE-TO-RENDER.md](./DOCKER-COMPOSE-TO-RENDER.md) for detailed comparison.
+**Guides:**
+- [RENDER-FREE-TIER.md](./RENDER-FREE-TIER.md) - Free tier deployment guide
+- [DOCKER-COMPOSE-TO-RENDER.md](./DOCKER-COMPOSE-TO-RENDER.md) - Detailed comparison
 
 ## 📋 Prerequisites
 
@@ -107,8 +109,9 @@ All other environment variables are already set in `render.yaml`.
 
 **What happens during Render deployment:**
 - Render reads your `render.yaml` Blueprint configuration
-- Builds the Docker image using `Dockerfile.fastapi` (same as docker-compose)
-- Uses the `CMD` instruction from Dockerfile (no separate startCommand needed)
+- Uses Python 3 runtime (optimized for free tier, avoids Docker compilation issues)
+- Runs `pip install -r requirements-render.txt` to install dependencies
+- Starts the server with `python fastapi_server.py`
 - Sets up environment variables (same as your docker-compose.yml)
 - Deploys with automatic HTTPS, scaling, and zero-downtime deployments
 
@@ -304,6 +307,18 @@ Error: docker runtime must not have startCommand
 Error: Service not responding on expected port
 ```
 **Solution**: Ensure your app listens on `PORT` environment variable (Render sets this to 10000)
+
+#### 5. Free Tier Compilation Issues
+```
+Error: pydantic-core compilation failed / Rust compilation error
+```
+**Solution**: Use `requirements-render.txt` with pre-compiled packages and Python runtime instead of Docker
+
+#### 6. Memory Issues on Free Tier
+```
+Error: Build killed / Out of memory
+```
+**Solution**: Use lighter dependencies in `requirements-render.txt` or upgrade to paid plan
 
 #### 3. Environment Variables Not Loading
 ```

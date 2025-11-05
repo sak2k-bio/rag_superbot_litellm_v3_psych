@@ -1,15 +1,16 @@
-# Render Blueprint for Psychiatry Therapy SuperBot
-# This file defines how to deploy your docker-compose setup to Render
+# Render Blueprint for Psychiatry Therapy SuperBot (Free Tier Optimized)
+# Using Python runtime instead of Docker to avoid compilation issues
 
 services:
   # FastAPI LiteLLM Proxy Service
   - type: web
     name: psychiatry-therapy-superbot-api
-    env: docker
-    dockerfilePath: ./Dockerfile.fastapi
-    plan: starter  # Can upgrade to standard/pro as needed
+    env: python3
+    plan: free  # Free tier
     region: oregon  # Choose region closest to your users
     branch: main
+    buildCommand: "pip install -r requirements-render.txt"
+    startCommand: "python fastapi_server.py"
     healthCheckPath: /health
     
     # Environment Variables (same as docker-compose.yml)

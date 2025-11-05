@@ -39,9 +39,10 @@ if [ ! -f "render.yaml" ]; then
     exit 1
 fi
 
-echo "📋 Render will deploy your Docker Compose equivalent using render.yaml"
-echo "🐳 This includes:"
-echo "  ✅ Same Dockerfile (Dockerfile.fastapi)"
+echo "📋 Render will deploy your FastAPI server using render.yaml"
+echo "🐍 This includes (Free Tier Optimized):"
+echo "  ✅ Python 3 runtime (avoids Docker compilation issues)"
+echo "  ✅ Pre-compiled dependencies (requirements-render.txt)"
 echo "  ✅ Same environment variables from docker-compose.yml"
 echo "  ✅ Same FastAPI server configuration"
 echo "  ✅ Same health checks"
