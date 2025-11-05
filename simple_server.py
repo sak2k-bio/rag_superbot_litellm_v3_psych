@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Minimal FastAPI server for Psychiatry Therapy SuperBot LiteLLM Proxy.
-Optimized for Render free tier with Python 3.13 compatibility.
+Enhanced server for Psychiatry Therapy SuperBot LiteLLM Proxy.
+Includes real 1minAI API integration with Python standard library only.
 """
 
 import os
@@ -10,6 +10,9 @@ import json
 import logging
 from typing import Dict, Any, List
 from datetime import datetime
+import urllib.request
+import urllib.parse
+import urllib.error
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -23,6 +26,92 @@ import threading
 # Environment variables
 ONEMINAI_API_KEY = os.getenv("ONEMINAI_API_KEY")
 PORT = int(os.getenv("PORT", "10000"))
+
+# 1minAI API integration using urllib (built-in)
+def make_1minai_request(messages, model="gemini-2.0-flash-lite"):
+    """Make request to 1minAI API using only built-in urllib"""
+    if not ONEMINAI_API_KEY:
+        raise Exception("ONEMINAI_API_KEY not configured")
+    
+    # Transform messages to prompt format
+    prompt_parts = []
+    for msg in messages:
+        role = msg.get("role", "user")
+        content = msg.get("content", "")
+        if role == "system":
+            prompt_parts.append(f"System: {content}")
+        elif role == "assistant":
+            prompt_parts.append(f"Assistant: {content}")
+        else:
+            prompt_parts.append(f"User: {content}")
+    
+    prompt = "\n\n".join(prompt_parts)
+    
+    # Map model names to 1minAI supported format
+    model_mapping = {
+        "gemini-2.0-flash-lite": "gemini-2.0-flash-lite",
+        "gemini-2.0-flash": "gemini-2.0-flash",
+        "gemini-1.5-flash": "gemini-1.5-flash",
+        "gemini-1.5-pro": "gemini-1.5-pro",
+        "gpt-4o-mini": "gpt-4o-mini",
+        "gpt-4o": "gpt-4o",
+        "claude-3-5-sonnet": "claude-3-5-sonnet",
+        "claude-3-haiku": "claude-3-haiku"
+    }
+    
+    mapped_model = model_mapping.get(model, "gemini-2.0-flash-lite")
+    
+    # Create 1minAI payload
+    payload = {
+        "type": "CHAT_WITH_AI",
+        "model": mapped_model,
+        "promptObject": {
+            "prompt": prompt,
+            "isMixed": False,
+            "webSearch": False
+        }
+    }
+    
+    # Prepare request
+    url = "https://api.1min.ai/api/features"
+    headers = {
+        "API-KEY": ONEMINAI_API_KEY,
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        # Make request using urllib
+        data = json.dumps(payload).encode('utf-8')
+        req = urllib.request.Request(url, data=data, headers=headers)
+        
+        with urllib.request.urlopen(req, timeout=60) as response:
+            if response.status == 200:
+                result = json.loads(response.read().decode('utf-8'))
+                
+                # Parse 1minAI response format
+                ai_record = result.get("aiRecord", {})
+                ai_record_detail = ai_record.get("aiRecordDetail", {})
+                result_object = ai_record_detail.get("resultObject", [])
+                
+                # Extract response text
+                response_text = ""
+                if isinstance(result_object, list) and result_object:
+                    response_text = str(result_object[0])
+                else:
+                    response_text = "I apologize, but I couldn't generate a response at this time."
+                
+                return response_text
+            else:
+                error_text = response.read().decode('utf-8')
+                logger.error(f"1minAI API error: {response.status} - {error_text}")
+                return "I'm experiencing technical difficulties. Please try again later."
+                
+    except urllib.error.URLError as e:
+        logger.error(f"1minAI API connection error: {str(e)}")
+        return "I'm currently unable to connect to my AI service. Please try again later."
+    except Exception as e:
+        logger.error(f"Unexpected error in 1minAI request: {str(e)}")
+        return "I encountered an unexpected error. Please try again later."
 
 class SimpleHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -51,6 +140,48 @@ class SimpleHandler(BaseHTTPRequestHandler):
                 "data": [
                     {
                         "id": "gemini-2.0-flash-lite",
+                        "object": "model",
+                        "created": int(time.time()),
+                        "owned_by": "1minai"
+                    },
+                    {
+                        "id": "gemini-2.0-flash",
+                        "object": "model",
+                        "created": int(time.time()),
+                        "owned_by": "1minai"
+                    },
+                    {
+                        "id": "gemini-1.5-flash",
+                        "object": "model",
+                        "created": int(time.time()),
+                        "owned_by": "1minai"
+                    },
+                    {
+                        "id": "gemini-1.5-pro",
+                        "object": "model",
+                        "created": int(time.time()),
+                        "owned_by": "1minai"
+                    },
+                    {
+                        "id": "gpt-4o-mini",
+                        "object": "model",
+                        "created": int(time.time()),
+                        "owned_by": "1minai"
+                    },
+                    {
+                        "id": "gpt-4o",
+                        "object": "model",
+                        "created": int(time.time()),
+                        "owned_by": "1minai"
+                    },
+                    {
+                        "id": "claude-3-5-sonnet",
+                        "object": "model",
+                        "created": int(time.time()),
+                        "owned_by": "1minai"
+                    },
+                    {
+                        "id": "claude-3-haiku",
                         "object": "model",
                         "created": int(time.time()),
                         "owned_by": "1minai"
@@ -89,18 +220,64 @@ class SimpleHandler(BaseHTTPRequestHandler):
                 post_data = self.rfile.read(content_length)
                 request_data = json.loads(post_data.decode('utf-8'))
                 
-                # Simple response for now
+                # Extract request parameters
+                messages = request_data.get("messages", [])
+                model = request_data.get("model", "gemini-2.0-flash-lite")
+                
+                if not messages:
+                    raise ValueError("Messages array is required")
+                
+                logger.info(f"Processing chat request with {len(messages)} messages for model: {model}")
+                
+                # Make real request to 1minAI API
+                ai_response = make_1minai_request(messages, model)
+                
+                # Create OpenAI-compatible response
                 response = {
                     "id": f"chatcmpl-{int(time.time())}",
                     "object": "chat.completion",
                     "created": int(time.time()),
-                    "model": request_data.get("model", "gemini-2.0-flash-lite"),
+                    "model": model,
                     "choices": [
                         {
                             "index": 0,
                             "message": {
                                 "role": "assistant",
-                                "content": "Hello! I'm your Psychiatry Therapy SuperBot. I'm currently running in minimal mode on Render's free tier. How can I help you today?"
+                                "content": ai_response
+                            },
+                            "finish_reason": "stop"
+                        }
+                    ],
+                    "usage": {
+                        "prompt_tokens": sum(len(msg.get("content", "").split()) for msg in messages),
+                        "completion_tokens": len(ai_response.split()),
+                        "total_tokens": sum(len(msg.get("content", "").split()) for msg in messages) + len(ai_response.split())
+                    }
+                }
+                
+                self.send_response(200)
+                self.send_header('Content-type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps(response).encode())
+                
+                logger.info(f"Successfully processed chat request")
+                
+            except Exception as e:
+                logger.error(f"Error processing chat request: {e}")
+                
+                # Return error response in OpenAI format
+                error_response = {
+                    "id": f"chatcmpl-{int(time.time())}",
+                    "object": "chat.completion",
+                    "created": int(time.time()),
+                    "model": request_data.get("model", "gemini-2.0-flash-lite") if 'request_data' in locals() else "gemini-2.0-flash-lite",
+                    "choices": [
+                        {
+                            "index": 0,
+                            "message": {
+                                "role": "assistant",
+                                "content": f"I apologize, but I encountered an error: {str(e)}. Please try again."
                             },
                             "finish_reason": "stop"
                         }
@@ -112,19 +289,10 @@ class SimpleHandler(BaseHTTPRequestHandler):
                     }
                 }
                 
-                self.send_response(200)
-                self.send_header('Content-type', 'application/json')
-                self.send_header('Access-Control-Allow-Origin', '*')
-                self.end_headers()
-                self.wfile.write(json.dumps(response).encode())
-                
-            except Exception as e:
-                logger.error(f"Error processing request: {e}")
                 self.send_response(500)
                 self.send_header('Content-type', 'application/json')
                 self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
-                error_response = {"error": "Internal Server Error", "message": str(e)}
                 self.wfile.write(json.dumps(error_response).encode())
         else:
             self.send_response(404)
