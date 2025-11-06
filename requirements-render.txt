@@ -1,11 +1,12 @@
 # Render Free Tier Compatible Dependencies
 # These versions avoid Rust compilation issues on Render's free tier
-
+--only-binary=pydantic,pydantic-core
 fastapi==0.104.1
 uvicorn==0.24.0
 pydantic==2.5.0
 python-multipart==0.0.6
 python-dotenv==1.0.0
+
 
 # Using httpx instead of aiohttp to avoid C extension compilation
 httpx==0.25.2
