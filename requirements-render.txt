@@ -1,9 +1,9 @@
 # Render Free Tier Compatible Dependencies
 # These versions avoid Rust compilation issues on Render's free tier
 --only-binary=pydantic,pydantic-core
-fastapi==0.104.1
+fastapi==0.121.0
 uvicorn==0.24.0
-pydantic==2.5.0
+pydantic==2.12.4 
 python-multipart==0.0.6
 python-dotenv==1.0.0
 
