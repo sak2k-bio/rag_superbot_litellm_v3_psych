@@ -2,6 +2,10 @@
 
 # dependencies
 /node_modules
+__pycache__
+.pip
+.env
+.venv
 /.pnp
 .pnp.*
 .yarn/*
@@ -46,3 +50,6 @@ next-env.d.ts
 WARP.md
 logs.ps1
 .vercel
+
+.kiro/
+.vscode
