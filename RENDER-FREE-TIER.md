@@ -143,7 +143,7 @@ Error: Could not find a version that satisfies the requirement
 ./deploy-render.sh
 
 # Your API will be available at:
-# https://psychiatry-therapy-superbot-api.onrender.com
+# 
 ```
 
 ## 📈 Upgrade Path

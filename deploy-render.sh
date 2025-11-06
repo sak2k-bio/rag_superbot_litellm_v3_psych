@@ -46,13 +46,12 @@ echo ""
 echo "📝 After Deployment:"
 echo ""
 echo "1. Your API will be available at:"
-echo "   https://psychiatry-therapy-superbot-api.onrender.com"
+echo "   =
 echo ""
-echo "2. Test the deployment:"
-echo "   curl https://psychiatry-therapy-superbot-api.onrender.com/health"
+echo "2. Test the deployment:"==
 echo ""
 echo "3. Update your frontend configuration:"
-echo "   NEXT_PUBLIC_LITELLM_API_URL=https://psychiatry-therapy-superbot-api.onrender.com"
+echo "   NEXT_PUBLIC_LITELLM_API_URL==
 echo ""
 
 # Check if git is initialized and has commits

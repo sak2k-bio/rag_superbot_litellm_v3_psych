@@ -118,20 +118,20 @@ All other environment variables are already set in `render.yaml`.
 ### 1.7 Get Your Render URL
 
 After deployment, Render provides you with a URL like:
-- `https://psychiatry-therapy-superbot-api.onrender.com`
+- `
 - Plus free SSL certificate and optional custom domains
 
 ### 1.8 Test Your Render Deployment
 
 ```bash
 # Test health endpoint
-curl https://psychiatry-therapy-superbot-api.onrender.com/health
+curl 
 
 # Test models endpoint
-curl https://psychiatry-therapy-superbot-api.onrender.com/v1/models
+curl 
 
 # Test chat completion
-curl -X POST https://psychiatry-therapy-superbot-api.onrender.com/v1/chat/completions \
+curl -X POST 
   -H "Content-Type: application/json" \
   -d '{
     "model": "gemini-2.0-flash-lite",

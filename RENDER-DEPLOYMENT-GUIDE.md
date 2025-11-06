@@ -40,9 +40,7 @@ git push origin main
 ### 3. Your Service URLs
 
 After deployment, your service will be available at:
-- **API Base**: `https://psychiatry-therapy-superbot-api.onrender.com`
-- **Health Check**: `https://psychiatry-therapy-superbot-api.onrender.com/health`
-- **Chat Endpoint**: `https://psychiatry-therapy-superbot-api.onrender.com/v1/chat/completions`
+
 
 ### 4. Update Frontend Configuration
 
@@ -50,7 +48,7 @@ After successful deployment, update your frontend to use the production API:
 
 **For Production Deployment** (Vercel/Netlify):
 ```env
-NEXT_PUBLIC_LITELLM_API_URL=https://psychiatry-therapy-superbot-api.onrender.com
+NEXT_PUBLIC_LITELLM_API_URL=
 ```
 
 **For Local Development** (keep as is):
@@ -62,10 +60,10 @@ NEXT_PUBLIC_LITELLM_API_URL=http://localhost:8000
 
 ```bash
 # Test health endpoint
-curl https://psychiatry-therapy-superbot-api.onrender.com/health
+curl 
 
 # Test chat endpoint
-curl -X POST https://psychiatry-therapy-superbot-api.onrender.com/v1/chat/completions \
+curl -X POST /v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gemini-2.0-flash-lite",

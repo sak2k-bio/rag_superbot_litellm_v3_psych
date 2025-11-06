@@ -228,9 +228,7 @@ http://localhost:8000/v1/chat/completions
 
 ### Render (Cloud)
 ```
-https://psychiatry-therapy-superbot-api.onrender.com/health
-https://psychiatry-therapy-superbot-api.onrender.com/v1/models
-https://psychiatry-therapy-superbot-api.onrender.com/v1/chat/completions
+
 ```
 
 Your Docker Compose setup is now running in the cloud with Render's enterprise-grade infrastructure! 🎉

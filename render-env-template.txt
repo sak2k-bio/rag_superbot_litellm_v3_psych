@@ -22,7 +22,7 @@ ONEMINAI_API_KEY=your_1minai_api_key_here
 # RENDER-SPECIFIC VARIABLES (Automatically set by Render)
 # PORT=10000 (Render sets this automatically)
 # RENDER_SERVICE_NAME=psychiatry-therapy-superbot-api
-# RENDER_EXTERNAL_URL=https://psychiatry-therapy-superbot-api.onrender.com
+# RENDER_EXTERNAL_URL=
 
 # How to set the secret in Render Dashboard:
 # 1. Go to https://dashboard.render.com
