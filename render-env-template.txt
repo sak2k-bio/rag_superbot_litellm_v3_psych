@@ -8,7 +8,7 @@ ONEMINAI_API_KEY=your_1minai_api_key_here
 # PUBLIC VARIABLES (Already defined in render.yaml)
 # These are automatically set by render.yaml:
 # FASTAPI_HOST=0.0.0.0
-# FASTAPI_PORT=10000
+# PORT=10000 (Render sets this automatically - don't override)
 # FASTAPI_RELOAD=false
 # FASTAPI_LOG_LEVEL=info
 # LITELLM_BASE_URL=https://api.1min.ai

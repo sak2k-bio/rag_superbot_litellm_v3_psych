@@ -17,8 +17,7 @@ services:
     envVars:
       - key: FASTAPI_HOST
         value: "0.0.0.0"
-      - key: FASTAPI_PORT
-        value: "10000"  # Render uses port 10000
+      # Note: Render automatically sets PORT=10000, no need to override
       - key: FASTAPI_RELOAD
         value: "false"
       - key: FASTAPI_LOG_LEVEL

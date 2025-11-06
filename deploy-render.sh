@@ -1,122 +1,77 @@
 #!/bin/bash
 
-# Deployment script for Psychiatry Therapy SuperBot Docker Compose to Render
+# Render Deployment Script for Psychiatry Therapy SuperBot
+# This script helps you deploy to Render using their Blueprint feature
 
-echo "🎨 Deploying Psychiatry Therapy SuperBot Docker Compose to Render..."
-
-# Check if render CLI is installed
-if ! command -v render &> /dev/null; then
-    echo "❌ Render CLI not found. Installing..."
-    
-    # Install Render CLI based on OS
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        # macOS
-        if command -v brew &> /dev/null; then
-            brew install render
-        else
-            echo "Please install Homebrew first, then run: brew install render"
-            exit 1
-        fi
-    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        # Linux
-        curl -fsSL https://cli.render.com/install | sh
-    else
-        echo "Please install Render CLI manually from: https://render.com/docs/cli"
-        exit 1
-    fi
-fi
-
-# Check if logged in to Render
-echo "🔐 Checking Render authentication..."
-if ! render auth whoami &> /dev/null; then
-    echo "❌ Not logged in to Render. Please run: render auth login"
-    exit 1
-fi
+echo "🚀 Deploying Psychiatry Therapy SuperBot to Render..."
 
 # Check if render.yaml exists
 if [ ! -f "render.yaml" ]; then
-    echo "❌ render.yaml not found! Please make sure you're in the project root directory."
+    echo "❌ render.yaml not found! Make sure you're in the project root directory."
     exit 1
 fi
 
-echo "📋 Render will deploy your FastAPI server using render.yaml"
-echo "🐍 This includes (Free Tier Optimized):"
-echo "  ✅ Python 3 runtime (avoids Docker compilation issues)"
-echo "  ✅ Pre-compiled dependencies (requirements-render.txt)"
-echo "  ✅ Same environment variables from docker-compose.yml"
-echo "  ✅ Same FastAPI server configuration"
-echo "  ✅ Same health checks"
-echo "  ✅ Plus Render's cloud benefits (auto-scaling, SSL, monitoring)"
+# Check if requirements-render.txt exists
+if [ ! -f "requirements-render.txt" ]; then
+    echo "❌ requirements-render.txt not found! This is required for Render deployment."
+    exit 1
+fi
+
+echo "✅ Configuration files found"
+
+# Display deployment information
+echo ""
+echo "📋 Deployment Configuration:"
+echo "   Service Name: psychiatry-therapy-superbot-api"
+echo "   Runtime: Python 3"
+echo "   Plan: Free Tier"
+echo "   Port: 10000 (automatic)"
+echo "   Health Check: /health"
 echo ""
 
-# Ask if user wants to set the secret API key
-read -p "Do you want to set your 1minAI API key as a secret? (y/N): " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    read -p "Enter your 1minAI API key: " ONEMINAI_KEY
-    if [ ! -z "$ONEMINAI_KEY" ]; then
-        echo "🔑 Setting ONEMINAI_API_KEY as a secret..."
-        # Note: This will be set via Render dashboard after deployment
-        echo "📝 Remember to set ONEMINAI_API_KEY in your Render service dashboard"
-        echo "   Value: $ONEMINAI_KEY"
+# Instructions for manual deployment
+echo "🔧 Manual Deployment Steps:"
+echo ""
+echo "1. Go to https://dashboard.render.com"
+echo "2. Click 'New +' → 'Blueprint'"
+echo "3. Connect your GitHub repository"
+echo "4. Render will automatically detect render.yaml"
+echo "5. Set the secret environment variable:"
+echo "   - Key: ONEMINAI_API_KEY"
+echo "   - Value: your_1minai_api_key_here"
+echo "6. Click 'Apply'"
+echo ""
+
+# Display post-deployment steps
+echo "📝 After Deployment:"
+echo ""
+echo "1. Your API will be available at:"
+echo "   https://psychiatry-therapy-superbot-api.onrender.com"
+echo ""
+echo "2. Test the deployment:"
+echo "   curl https://psychiatry-therapy-superbot-api.onrender.com/health"
+echo ""
+echo "3. Update your frontend configuration:"
+echo "   NEXT_PUBLIC_LITELLM_API_URL=https://psychiatry-therapy-superbot-api.onrender.com"
+echo ""
+
+# Check if git is initialized and has commits
+if [ -d ".git" ]; then
+    echo "✅ Git repository detected"
+    
+    # Check if there are uncommitted changes
+    if [ -n "$(git status --porcelain)" ]; then
+        echo "⚠️  You have uncommitted changes. Consider committing them before deployment:"
+        echo "   git add ."
+        echo "   git commit -m 'Update configuration for Render deployment'"
+        echo "   git push origin main"
+    else
+        echo "✅ No uncommitted changes"
     fi
-fi
-
-# Deploy using render.yaml blueprint
-echo ""
-echo "🚀 Deploying to Render using Blueprint (render.yaml)..."
-echo "📦 Render will:"
-echo "  1. Read render.yaml configuration"
-echo "  2. Build Docker image using Dockerfile.fastapi"
-echo "  3. Set up environment variables (same as docker-compose)"
-echo "  4. Deploy with auto-scaling and monitoring"
-echo ""
-
-# Check if this is a git repository
-if [ ! -d ".git" ]; then
-    echo "⚠️  This is not a git repository. Render requires git for deployment."
-    echo "🔧 Initializing git repository..."
-    git init
-    git add .
-    git commit -m "Initial commit for Render deployment"
-fi
-
-# Deploy via Blueprint
-render blueprint launch
-
-if [ $? -eq 0 ]; then
-    echo "✅ Render deployment initiated successfully!"
-    echo ""
-    echo "🌐 Your service will be available at:"
-    echo "   https://psychiatry-therapy-superbot-api.onrender.com"
-    echo "   (or your custom domain if configured)"
-    echo ""
-    echo "🧪 Test your deployment:"
-    echo "  Health check: curl https://psychiatry-therapy-superbot-api.onrender.com/health"
-    echo "  Models: curl https://psychiatry-therapy-superbot-api.onrender.com/v1/models"
-    echo ""
-    echo "🎉 Docker Compose deployment to Render complete!"
-    echo ""
-    echo "📋 Next steps:"
-    echo "1. Set ONEMINAI_API_KEY in Render dashboard (if not done already)"
-    echo "2. Test your API endpoints"
-    echo "3. Update your Vercel environment variables with the Render URL"
-    echo "4. Deploy your frontend to Vercel"
-    echo ""
-    echo "📊 Monitor your deployment:"
-    echo "  View logs: render logs -s psychiatry-therapy-superbot-api"
-    echo "  Check status: render services list"
-    echo "  Open dashboard: https://dashboard.render.com"
-    echo ""
-    echo "🔧 Update your frontend .env with:"
-    echo "  NEXT_PUBLIC_LITELLM_API_URL=https://psychiatry-therapy-superbot-api.onrender.com"
 else
-    echo "❌ Render deployment failed!"
-    echo "🔍 Check the Render dashboard for deployment logs"
-    echo "💡 Common issues:"
-    echo "  - Make sure you're logged in: render auth login"
-    echo "  - Check render.yaml syntax (no startCommand with Docker runtime)"
-    echo "  - Ensure git repository is properly set up"
-    echo "  - Verify ONEMINAI_API_KEY is set in Render dashboard"
-    exit 1
+    echo "⚠️  No git repository found. Make sure your code is pushed to GitHub."
 fi
+
+echo ""
+echo "🎉 Ready for Render deployment!"
+echo "   Visit: https://dashboard.render.com to deploy"
