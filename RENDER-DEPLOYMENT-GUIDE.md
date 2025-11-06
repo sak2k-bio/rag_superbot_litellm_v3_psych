@@ -78,7 +78,7 @@ curl -X POST https://psychiatry-therapy-superbot-api.onrender.com/v1/chat/comple
 - `render.yaml` - Render service configuration  
 - `simple_server.py` - Lightweight server using only Python standard library (for Render)
 - `fastapi_server.py` - Full FastAPI server (for local development)
-- `runtime.txt` - Specifies Python 3.11.9 for Render compatibility
+- `runtime.txt` - Specifies Python 3.13.4 to match Render's default
 
 ### 7. How Port Handling Works
 

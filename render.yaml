@@ -9,7 +9,7 @@ services:
     plan: free  # Free tier
     region: oregon  # Choose region closest to your users
     branch: main
-    buildCommand: "echo 'Using Python standard library only - no dependencies to install'"
+    buildCommand: "python --version && echo 'Using Python standard library only - no dependencies to install'"
     startCommand: "python simple_server.py"
     healthCheckPath: /health
     

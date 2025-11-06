@@ -1,0 +1,51 @@
+# Alternative render.yaml for forcing Python 3.11
+# Use this if you specifically need Python 3.11
+
+services:
+  - type: web
+    name: psychiatry-therapy-superbot-api
+    env: python3
+    plan: free
+    region: oregon
+    branch: main
+    
+    # Force Python 3.11 installation
+    buildCommand: |
+      echo "Current Python version:" && python --version &&
+      echo "Installing Python 3.11..." &&
+      apt-get update && apt-get install -y python3.11 python3.11-venv &&
+      python3.11 --version &&
+      echo "Python 3.11 installation complete"
+    
+    # Use Python 3.11 explicitly
+    startCommand: "python3.11 simple_server.py"
+    healthCheckPath: /health
+    
+    envVars:
+      - key: FASTAPI_HOST
+        value: "0.0.0.0"
+      - key: FASTAPI_RELOAD
+        value: "false"
+      - key: FASTAPI_LOG_LEVEL
+        value: "info"
+      - key: LITELLM_BASE_URL
+        value: "https://api.1min.ai"
+      - key: DEFAULT_MODEL
+        value: "gemini-2.0-flash-lite"
+      - key: MAX_TOKENS
+        value: "4096"
+      - key: TEMPERATURE
+        value: "0.7"
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: CORS_ALLOW_CREDENTIALS
+        value: "true"
+      - key: HEALTH_CHECK_INTERVAL
+        value: "30"
+      - key: ONEMINAI_API_KEY
+        sync: false
+
+    autoDeploy: true
+
+# Note: This approach installs Python 3.11 manually
+# It may increase build time but gives you exact version control

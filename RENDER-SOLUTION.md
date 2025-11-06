@@ -38,9 +38,9 @@ startCommand: "python simple_server.py"
 
 ### 2. Added runtime.txt
 ```
-python-3.11.9
+python-3.13.4
 ```
-Forces Render to use Python 3.11.9 instead of 3.13 (better compatibility).
+Specifies Python 3.13.4 to match Render's default (ensures consistency).
 
 ### 3. Server Comparison
 
