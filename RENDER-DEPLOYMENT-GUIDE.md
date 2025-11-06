@@ -75,20 +75,25 @@ curl -X POST https://psychiatry-therapy-superbot-api.onrender.com/v1/chat/comple
 
 ### 6. Configuration Files Used
 
-- `render.yaml` - Render service configuration
-- `requirements-render.txt` - Python dependencies for Render
-- `fastapi_server.py` - Your FastAPI server (handles both local port 8000 and Render port 10000)
+- `render.yaml` - Render service configuration  
+- `simple_server.py` - Lightweight server using only Python standard library (for Render)
+- `fastapi_server.py` - Full FastAPI server (for local development)
+- `runtime.txt` - Specifies Python 3.11.9 for Render compatibility
 
 ### 7. How Port Handling Works
 
-Your `fastapi_server.py` automatically handles different environments:
+Both servers automatically handle different environments:
 
+**Local Development** (`fastapi_server.py`):
 ```python
-# This code in fastapi_server.py handles both local and Render:
 port = int(os.getenv("PORT", os.getenv("FASTAPI_PORT", "8000")))
+# Uses FASTAPI_PORT=8000 from .env.local
+```
 
-# Local: PORT not set, FASTAPI_PORT=8000 → uses 8000
-# Render: PORT=10000 (automatic) → uses 10000
+**Render Production** (`simple_server.py`):
+```python
+PORT = int(os.getenv("PORT", "10000"))
+# Uses Render's automatic PORT=10000
 ```
 
 ### 8. Free Tier Considerations

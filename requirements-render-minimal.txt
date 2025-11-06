@@ -1,0 +1,10 @@
+# Minimal dependencies for Render Free Tier
+# Uses only packages that don't require compilation
+
+# No dependencies - using only Python standard library
+# This ensures maximum compatibility with Render's free tier
+
+# If you need to add dependencies, use these compilation-free versions:
+# fastapi==0.68.0  # Older version without pydantic v2
+# uvicorn==0.15.0  # Older stable version
+# python-dotenv==0.19.0  # For .env file support

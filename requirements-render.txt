@@ -1,12 +1,14 @@
-# FastAPI server dependencies matching the working v2 project
-# Using aiohttp (like v2) instead of httpx for 1minAI API calls
+# Render Free Tier Compatible Dependencies
+# These versions avoid Rust compilation issues on Render's free tier
 
-fastapi==0.100.1
-uvicorn[standard]==0.23.2
-pydantic==2.3.0
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.0
 python-multipart==0.0.6
-aiohttp==3.9.1
 python-dotenv==1.0.0
 
-# Note: Using aiohttp like the working v2 project
-# This is the exact combination that works with your API key
+# Using httpx instead of aiohttp to avoid C extension compilation
+httpx==0.25.2
+
+# Note: These versions are specifically chosen to work on Render's free tier
+# without requiring Rust or C compilation
