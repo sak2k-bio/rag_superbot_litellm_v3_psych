@@ -28,7 +28,7 @@ ONEMINAI_API_KEY = os.getenv("ONEMINAI_API_KEY")
 PORT = int(os.getenv("PORT", "10000"))
 
 # 1minAI API integration using urllib (built-in)
-def make_1minai_request(messages, model="gemini-2.0-flash-lite"):
+def make_1minai_request(messages, model="mistral-small-latest"):
     """Make request to 1minAI API using only built-in urllib"""
     if not ONEMINAI_API_KEY:
         raise Exception("ONEMINAI_API_KEY not configured")
@@ -49,7 +49,7 @@ def make_1minai_request(messages, model="gemini-2.0-flash-lite"):
     
     # Map model names to 1minAI supported format
     model_mapping = {
-        "gemini-2.0-flash-lite": "gemini-2.0-flash-lite",
+        "mistral-small-latest": "mistral-small-latest",
         "gemini-2.0-flash": "gemini-2.0-flash",
         "gemini-1.5-flash": "gemini-1.5-flash",
         "gemini-1.5-pro": "gemini-1.5-pro",
@@ -59,7 +59,7 @@ def make_1minai_request(messages, model="gemini-2.0-flash-lite"):
         "claude-3-haiku": "claude-3-haiku"
     }
     
-    mapped_model = model_mapping.get(model, "gemini-2.0-flash-lite")
+    mapped_model = model_mapping.get(model, "mistral-small-latest")
     
     # Create 1minAI payload
     payload = {
@@ -151,7 +151,7 @@ class SimpleHandler(BaseHTTPRequestHandler):
                 "object": "list",
                 "data": [
                     {
-                        "id": "gemini-2.0-flash-lite",
+                        "id": "mistral-small-latest",
                         "object": "model",
                         "created": int(time.time()),
                         "owned_by": "1minai"
@@ -234,7 +234,7 @@ class SimpleHandler(BaseHTTPRequestHandler):
                 
                 # Extract request parameters
                 messages = request_data.get("messages", [])
-                model = request_data.get("model", "gemini-2.0-flash-lite")
+                model = request_data.get("model", "mistral-small-latest")
                 
                 if not messages:
                     raise ValueError("Messages array is required")
@@ -283,7 +283,7 @@ class SimpleHandler(BaseHTTPRequestHandler):
                     "id": f"chatcmpl-{int(time.time())}",
                     "object": "chat.completion",
                     "created": int(time.time()),
-                    "model": request_data.get("model", "gemini-2.0-flash-lite") if 'request_data' in locals() else "gemini-2.0-flash-lite",
+                    "model": request_data.get("model", "mistral-small-latest") if 'request_data' in locals() else "mistral-small-latest",
                     "choices": [
                         {
                             "index": 0,

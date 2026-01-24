@@ -67,13 +67,13 @@ async function make1minAIRequest(messages, model, temperature = 0.7, maxTokens =
         'gpt-4o': 'gpt-4o',
         'claude-3-5-sonnet': 'claude-3-5-sonnet',
         'claude-3-haiku': 'claude-3-haiku',
-        'gemini-2.0-flash-lite': 'gemini-2.0-flash-lite',
+        'mistral-small-latest': 'mistral-small-latest',
         'gemini-2.0-flash': 'gemini-2.0-flash',
         'gemini-1.5-flash': 'gemini-1.5-flash',
         'gemini-1.5-pro': 'gemini-1.5-pro',
     };
 
-    const mappedModel = modelMapping[model] || 'gemini-2.0-flash-lite';
+    const mappedModel = modelMapping[model] || 'mistral-small-latest';
 
     // Create 1minAI payload
     const payload = {
@@ -156,7 +156,7 @@ async function make1minAIRequest(messages, model, temperature = 0.7, maxTokens =
 function getAvailableModels() {
     const models = [
         {
-            id: 'gemini-2.0-flash-lite',
+            id: 'mistral-small-latest',
             object: 'model',
             created: Math.floor(Date.now() / 1000),
             owned_by: '1minai',
@@ -274,7 +274,7 @@ export default {
             if ((path === '/v1/chat/completions' || path === '/chat/completions') && request.method === 'POST') {
                 try {
                     const requestData = await request.json();
-                    const { model = 'gemini-2.0-flash-lite', messages, temperature = 0.7, max_tokens } = requestData;
+                    const { model = 'mistral-small-latest', messages, temperature = 0.7, max_tokens } = requestData;
 
                     if (!messages || !Array.isArray(messages)) {
                         throw new Error('Messages array is required');
@@ -299,7 +299,7 @@ export default {
                         id: `chatcmpl-${Date.now()}`,
                         object: 'chat.completion',
                         created: Math.floor(Date.now() / 1000),
-                        model: requestData?.model || 'gemini-2.0-flash-lite',
+                        model: requestData?.model || 'mistral-small-latest',
                         choices: [
                             {
                                 index: 0,

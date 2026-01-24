@@ -15,7 +15,7 @@ def test_1minai_api():
     
     payload = {
         "type": "CHAT_WITH_AI",
-        "model": "gemini-2.0-flash-lite",
+        "model": "mistral-small-latest",
         "promptObject": {
             "prompt": "Hello, how are you?",
             "isMixed": False,

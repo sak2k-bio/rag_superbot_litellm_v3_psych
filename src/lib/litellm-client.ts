@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 
 // Configuration - Using Next.js public environment variables
 const LITELLM_API_URL = process.env.NEXT_PUBLIC_LITELLM_API_URL || 'http://localhost:8000';
-const LITELLM_MODEL = process.env.NEXT_PUBLIC_LITELLM_MODEL || 'gemini-2.0-flash-lite';
+const LITELLM_MODEL = process.env.NEXT_PUBLIC_LITELLM_MODEL || 'mistral-small-latest';
 const LITELLM_TEMPERATURE = parseFloat(process.env.NEXT_PUBLIC_LITELLM_TEMPERATURE || '0.7');
 const LITELLM_MAX_TOKENS = parseInt(process.env.NEXT_PUBLIC_LITELLM_MAX_TOKENS || '2048');
 

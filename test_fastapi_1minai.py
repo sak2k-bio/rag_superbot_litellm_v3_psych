@@ -35,7 +35,7 @@ async def test_1minai_fastapi_style():
     # Create 1minAI payload (exact same as FastAPI server)
     payload = {
         "type": "CHAT_WITH_AI",
-        "model": "gemini-2.0-flash-lite",
+        "model": "mistral-small-latest",
         "promptObject": {
             "prompt": prompt,
             "isMixed": False,

@@ -12,7 +12,7 @@ const GEMINI_MAX_TOKENS = parseInt(process.env.NEXT_PUBLIC_GEMINI_MAX_TOKENS || 
 
 // LiteLLM Configuration
 const USE_LITELLM = process.env.NEXT_PUBLIC_USE_LITELLM === 'true';
-const LITELLM_MODEL = process.env.NEXT_PUBLIC_LITELLM_MODEL || 'gemini-2.0-flash-lite';
+const LITELLM_MODEL = process.env.NEXT_PUBLIC_LITELLM_MODEL || 'mistral-small-latest';
 
 // Initialize Google AI (fallback only)
 const genAI = GOOGLE_API_KEY ? new GoogleGenerativeAI(GOOGLE_API_KEY) : null;

@@ -4,7 +4,7 @@
 # LiteLLM / Render Configuration (Primary)
 NEXT_PUBLIC_USE_LITELLM=true
 NEXT_PUBLIC_LITELLM_API_URL=https://rag-superbot-litellm-v3-psych.onrender.com
-NEXT_PUBLIC_LITELLM_MODEL=gemini-2.0-flash-lite
+NEXT_PUBLIC_LITELLM_MODEL=mistral-small-latest
 NEXT_PUBLIC_LITELLM_TEMPERATURE=0.7
 NEXT_PUBLIC_LITELLM_MAX_TOKENS=2048
 

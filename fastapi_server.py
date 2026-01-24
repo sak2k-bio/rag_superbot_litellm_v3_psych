@@ -49,7 +49,7 @@ class ChatMessage(BaseModel):
     content: str = Field(..., description="Message content")
 
 class ChatCompletionRequest(BaseModel):
-    model: str = Field(default="gemini-2.0-flash-lite", description="Model to use")
+    model: str = Field(default="mistral-small-latest", description="Model to use")
     messages: List[ChatMessage] = Field(..., description="List of chat messages")
     temperature: Optional[float] = Field(default=0.7, description="Sampling temperature")
     max_tokens: Optional[int] = Field(default=None, description="Maximum tokens to generate")
@@ -108,14 +108,14 @@ async def make_1minai_request(messages: List[ChatMessage], model: str, temperatu
         "gpt-4o": "gpt-4o",
         "claude-3-5-sonnet": "claude-3-5-sonnet",
         "claude-3-haiku": "claude-3-haiku",
-        "gemini-2.0-flash-lite": "gemini-2.0-flash-lite",
+        "mistral-small-latest": "mistral-small-latest",
         "gemini-2.0-flash": "gemini-2.0-flash",
         "gemini-1.5-flash": "gemini-1.5-flash",
         "gemini-1.5-pro": "gemini-1.5-pro"
     }
     
-    # Use mapped model name or fallback to gemini-2.0-flash-lite
-    mapped_model = model_mapping.get(model, "gemini-2.0-flash-lite")
+    # Use mapped model name or fallback to mistral-small-latest
+    mapped_model = model_mapping.get(model, "mistral-small-latest")
     
     # Create 1minAI payload
     payload = {
@@ -218,7 +218,7 @@ async def get_1minai_models() -> List[Dict[str, Any]]:
     # Return supported models
     models = [
         {
-            "id": "gemini-2.0-flash-lite",
+            "id": "mistral-small-latest",
             "object": "model",
             "created": int(time.time()),
             "owned_by": "1minai"

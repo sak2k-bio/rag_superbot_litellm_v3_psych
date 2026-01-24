@@ -52,7 +52,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     
     echo "Setting LiteLLM configuration..."
     railway variables set LITELLM_BASE_URL=https://api.1min.ai
-    railway variables set DEFAULT_MODEL=gemini-2.0-flash-lite
+    railway variables set DEFAULT_MODEL=mistral-small-latest
     railway variables set MAX_TOKENS=4096
     railway variables set TEMPERATURE=0.7
     
@@ -73,7 +73,7 @@ else
     echo "  FASTAPI_RELOAD=false"
     echo "  FASTAPI_LOG_LEVEL=info"
     echo "  LITELLM_BASE_URL=https://api.1min.ai"
-    echo "  DEFAULT_MODEL=gemini-2.0-flash-lite"
+    echo "  DEFAULT_MODEL=mistral-small-latest"
     echo "  MAX_TOKENS=4096"
     echo "  TEMPERATURE=0.7"
     echo "  CORS_ORIGINS=*"
