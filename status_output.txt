@@ -1,0 +1,37 @@
+On branch master
+Your branch and 'origin/master' have diverged,
+and have 1 and 4 different commits each, respectively.
+  (use "git pull" if you want to integrate the remote branch with yours)
+
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Changes to be committed:
+	modified:   config.env
+	modified:   deploy-railway.sh
+	modified:   docker-compose.railway.yml
+	modified:   docker-compose.render.yml
+	modified:   docker-compose.yml
+	modified:   fastapi_server.py
+	modified:   railway-env-template.txt
+	modified:   render-env-template.txt
+	modified:   render-python311.yaml
+	modified:   render.yaml
+	modified:   simple_server.py
+	modified:   src/lib/agents.ts
+	modified:   src/lib/litellm-client.ts
+	modified:   src/worker.js
+	modified:   test_1minai.py
+	modified:   test_fastapi_1minai.py
+	modified:   vercel-env-production.txt
+	modified:   wrangler.toml
+
+Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+	both modified:   package.json
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	status_output.txt
+

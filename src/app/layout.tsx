@@ -12,10 +12,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   title: "Psychiatry Therapy SuperBot",
   description: "A RAG SuperBot for Psychiatry and Therapy that uses multi-agentic architecture",
-  viewport: "width=device-width, initial-scale=1",
 };
 
 export default function RootLayout({
@@ -27,6 +31,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         {children}
       </body>
