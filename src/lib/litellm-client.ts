@@ -77,12 +77,12 @@ export async function generateChatCompletion(
         headers: {
           'Content-Type': 'application/json',
         },
-        timeout: 60000, // 60 second timeout
+        timeout: 300000, // 300 second timeout (5 minutes)
       }
     );
 
     const content = response.data.choices[0]?.message?.content || '';
-    
+
     console.log(`✅ LiteLLM: Successfully generated response (${content.length} chars)`);
     console.log(`📊 LiteLLM: Token usage - Prompt: ${response.data.usage.prompt_tokens}, Completion: ${response.data.usage.completion_tokens}`);
 
@@ -96,26 +96,26 @@ export async function generateChatCompletion(
         data: axiosError.response?.data,
         message: axiosError.message,
       });
-      
+
       // Provide more helpful error messages
       if (axiosError.code === 'ECONNREFUSED') {
         throw new Error(
           `LiteLLM proxy server is not running. Please start it with: docker-compose up -d fastapi-litellm`
         );
       }
-      
+
       if (axiosError.response?.status === 500) {
         const errorData = axiosError.response.data as any;
         throw new Error(
           `LiteLLM proxy error: ${errorData?.detail || 'Internal server error'}. Check if ONEMINAI_API_KEY is configured.`
         );
       }
-      
+
       throw new Error(
         `LiteLLM request failed: ${axiosError.message}. Status: ${axiosError.response?.status || 'N/A'}`
       );
     }
-    
+
     console.error('❌ Unexpected error in LiteLLM client:', error);
     throw error;
   }
@@ -134,7 +134,7 @@ export async function generateTextCompletion(
   }
 ): Promise<string> {
   const messages: ChatMessage[] = [];
-  
+
   // Add system prompt if provided
   if (options?.systemPrompt) {
     messages.push({
@@ -142,13 +142,13 @@ export async function generateTextCompletion(
       content: options.systemPrompt,
     });
   }
-  
+
   // Add user prompt
   messages.push({
     role: 'user',
     content: prompt,
   });
-  
+
   return generateChatCompletion(messages, options);
 }
 
@@ -161,10 +161,10 @@ export async function checkHealth(): Promise<boolean> {
     const response = await axios.get(`${LITELLM_API_URL}/health`, {
       timeout: 5000,
     });
-    
+
     const isHealthy = response.status === 200 && response.data.status === 'healthy';
     console.log(`${isHealthy ? '✅' : '❌'} LiteLLM: Health check ${isHealthy ? 'passed' : 'failed'}`);
-    
+
     return isHealthy;
   } catch (error) {
     console.error('❌ LiteLLM: Health check failed:', error);
@@ -181,10 +181,10 @@ export async function getAvailableModels(): Promise<string[]> {
     const response = await axios.get<ModelsListResponse>(`${LITELLM_API_URL}/v1/models`, {
       timeout: 5000,
     });
-    
+
     const models = response.data.data.map((model) => model.id);
     console.log(`✅ LiteLLM: Found ${models.length} models:`, models);
-    
+
     return models;
   } catch (error) {
     console.error('❌ LiteLLM: Failed to fetch models:', error);

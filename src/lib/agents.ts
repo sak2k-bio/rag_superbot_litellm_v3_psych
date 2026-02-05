@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import axios from 'axios';
 import { getVectorStore } from './vectorstore';
-import { generateTextCompletion, checkHealth as checkLiteLLMHealth } from './litellm-client';
+import { generateTextCompletion } from './litellm-client';
 
 // Configuration - Using Next.js public environment variables
 const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
@@ -38,7 +38,7 @@ export class QueryAgent implements Agent {
 
   async process(input: { query: string }): Promise<{ processedQuery: string; needsRetrieval: boolean; thinkingSteps: ThinkingStep[] }> {
     const thinkingSteps: ThinkingStep[] = [];
-    
+
     try {
       thinkingSteps.push({
         agent: this.name,
@@ -76,9 +76,9 @@ export class QueryAgent implements Agent {
     // Simple heuristic - retrieve for questions and specific queries
     const questionWords = ['what', 'how', 'why', 'when', 'where', 'who', 'which'];
     const lowerQuery = query.toLowerCase();
-    return questionWords.some(word => lowerQuery.includes(word)) || 
-           query.length > 20 || 
-           lowerQuery.includes('?');
+    return questionWords.some(word => lowerQuery.includes(word)) ||
+      query.length > 20 ||
+      lowerQuery.includes('?');
   }
 }
 
@@ -88,7 +88,7 @@ export class RetrievalAgent implements Agent {
 
   async process(input: { query: string; k?: number }): Promise<{ documents: any[]; thinkingSteps: ThinkingStep[] }> {
     const thinkingSteps: ThinkingStep[] = [];
-    
+
     try {
       thinkingSteps.push({
         agent: this.name,
@@ -128,7 +128,7 @@ export class AnswerAgent implements Agent {
 
   async process(input: { query: string; documents: any[] }): Promise<{ answer: string; thinkingSteps: ThinkingStep[] }> {
     const thinkingSteps: ThinkingStep[] = [];
-    
+
     try {
       thinkingSteps.push({
         agent: this.name,
@@ -145,10 +145,10 @@ export class AnswerAgent implements Agent {
         step: 'Response Generation',
         status: 'completed',
         message: 'Response generated successfully',
-        details: { 
-          query: input.query, 
+        details: {
+          query: input.query,
           contextLength: context.length,
-          documentCount: input.documents.length 
+          documentCount: input.documents.length
         }
       });
 
@@ -198,7 +198,7 @@ Answer:`;
     if (genAI) {
       try {
         console.log("🚀 Using Google Gemini for answer generation...");
-        const model = genAI.getGenerativeModel({ 
+        const model = genAI.getGenerativeModel({
           model: GEMINI_MODEL,
           generationConfig: {
             temperature: GEMINI_TEMPERATURE,
@@ -242,7 +242,7 @@ export class CriticAgent implements Agent {
 
   async process(input: { query: string; answer: string; documents: any[] }): Promise<{ critique: string; score: number; thinkingSteps: ThinkingStep[] }> {
     const thinkingSteps: ThinkingStep[] = [];
-    
+
     try {
       thinkingSteps.push({
         agent: this.name,
@@ -277,34 +277,34 @@ export class CriticAgent implements Agent {
 
   private evaluateAnswer(query: string, answer: string, documents: any[]): string {
     const critiques = [];
-    
+
     if (answer.length < 50) {
       critiques.push("Answer is too brief");
     }
-    
+
     if (answer.includes("I don't know") || answer.includes("I can't")) {
       critiques.push("Answer indicates uncertainty");
     }
-    
+
     if (documents.length === 0) {
       critiques.push("No supporting documents found");
     }
-    
+
     if (critiques.length === 0) {
       return "Answer appears comprehensive and well-supported";
     }
-    
+
     return critiques.join("; ");
   }
 
   private calculateScore(query: string, answer: string, documents: any[]): number {
     let score = 5; // Base score
-    
+
     if (answer.length > 100) score += 1;
     if (documents.length > 0) score += 2;
     if (!answer.includes("I don't know")) score += 1;
     if (answer.includes(query.toLowerCase())) score += 1;
-    
+
     return Math.min(10, score);
   }
 }
@@ -315,7 +315,7 @@ export class RefineAgent implements Agent {
 
   async process(input: { query: string; answer: string; critique: string; documents: any[] }): Promise<{ refinedAnswer: string; thinkingSteps: ThinkingStep[] }> {
     const thinkingSteps: ThinkingStep[] = [];
-    
+
     try {
       thinkingSteps.push({
         agent: this.name,
@@ -331,7 +331,7 @@ export class RefineAgent implements Agent {
         step: 'Answer Refinement',
         status: 'completed',
         message: 'Answer refined successfully',
-        details: { 
+        details: {
           originalLength: input.answer.length,
           refinedLength: refinedAnswer.length,
           critique: input.critique
@@ -384,7 +384,7 @@ Refined Answer:`;
     if (genAI) {
       try {
         console.log("🚀 Using Google Gemini for answer refinement...");
-        const model = genAI.getGenerativeModel({ 
+        const model = genAI.getGenerativeModel({
           model: GEMINI_MODEL,
           generationConfig: {
             temperature: GEMINI_TEMPERATURE,

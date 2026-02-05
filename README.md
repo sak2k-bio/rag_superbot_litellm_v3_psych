@@ -1,8 +1,10 @@
-# RAG A2A Superbot - LiteLLM Edition
+# RAG A2A Superbot - LiteLLM Edition + Therapy Craft Mode
 
 A Next.js RAG (Retrieval-Augmented Generation) application with intelligent agent-based responses powered by **LiteLLM proxy + 1minAI** for free multi-model access (Gemini 2.0 Flash Lite, GPT-4o, Claude, etc.) and Qdrant Cloud for vector search.
 
-## 🆕 What's New - LiteLLM Integration
+**NEW:** Custom Therapy Craft Mode for generating personalized therapy session protocols with AI precision.
+
+## 🆕 What's New - LiteLLM Integration + Therapy Craft Mode
 
 **🎉 Now using FREE 1minAI API via LiteLLM Proxy!**
 
@@ -12,11 +14,14 @@ A Next.js RAG (Retrieval-Augmented Generation) application with intelligent agen
 - ✅ **Intelligent Fallback**: Auto-fallback to Google Gemini if needed
 - ✅ **Same RAG Quality**: Unchanged vector search with Qdrant
 - ✅ **Easy Setup**: One-command Docker deployment
+- ✅ **Therapy Craft Mode**: Generate custom therapy protocols with session tracking
 
 **📚 Quick Links:**
 - **[Quick Start Guide](./QUICKSTART.md)** - Get running in 5 minutes
 - **[Full Integration Docs](./LITELLM_INTEGRATION.md)** - Detailed technical guide
 - **[Deployment Scripts](./start-services.ps1)** - Easy service management
+- **[MASTER Configuration Guide](./MASTER.md)** - Quick reference for modifications
+- **[Google Sheets Integration](./GOOGLE_SHEETS_INTEGRATION.md)** - Save therapy protocols
 
 ## 🚀 Features
 
@@ -40,6 +45,16 @@ A Next.js RAG (Retrieval-Augmented Generation) application with intelligent agen
 - **Auto-Detection**: Automatically detects and uses cloud vs local based on configuration
 - **Security**: Secure API key management through environment variables
 
+### ✅ Therapy Craft Mode (NEW!)
+- **Custom Therapy Protocols**: Generate personalized therapy session plans
+- **Session Tracking**: Track session numbers and progression
+- **Depth Control**: Adjust output detail level (1-5 scale)
+- **Multiple Personas**: CBT, DBT, Psychodynamic, Humanistic, and more
+- **Clinical Profiles**: Comprehensive patient demographics and clinical data
+- **Google Sheets Integration**: Automatically save protocols to Google Sheets
+- **Clean Output**: Professional formatting without AI-generated artifacts
+- **Copy to Clipboard**: One-click copy for easy sharing
+
 ### ✅ Advanced RAG Capabilities
 - **Multiple Pipeline Modes**: Choose from 5 different processing pipelines
 - **Real-time Thinking Process**: See how agents process your queries step-by-step
@@ -53,6 +68,7 @@ A Next.js RAG (Retrieval-Augmented Generation) application with intelligent agen
 ### API Routes
 
 - `/api/chat` - Main chat endpoint with RAG pipeline
+- `/api/therapy-craft` - Generate custom therapy protocols (NEW!)
 - `/api/documents` - Document upload and management
 - `/api/sample-documents` - Load sample knowledge base
 - `/api/status` - System health and configuration status

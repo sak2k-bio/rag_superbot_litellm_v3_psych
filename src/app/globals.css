@@ -87,3 +87,32 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--foreground);
 }
+
+/* Custom styles for therapy protocol output */
+.list-item {
+  margin-left: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.list-item strong {
+  font-weight: 600;
+}
+
+.prose h1, .prose h2, .prose h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  color: inherit;
+}
+
+.prose h1 {
+  font-size: 1.875rem;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+}

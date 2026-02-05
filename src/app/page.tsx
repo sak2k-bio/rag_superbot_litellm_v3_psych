@@ -192,6 +192,14 @@ export default function Home() {
                 <option value="meta">META: Intelligent Selection</option>
               </select>
             </div>
+
+            <a
+              href="/therapy-craft"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-lg shadow-md transition-all text-sm font-medium"
+            >
+              <Brain className="w-4 h-4" />
+              Craft Mode
+            </a>
           </div>
         </div>
 
