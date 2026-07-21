@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
                 const retrievalAgent = new RetrievalAgent();
                 const keywords = `${topic} ${clinical.diagnosis || ''} ${clinical.comorbidities?.join(' ') || ''}`;
                 const result = await retrievalAgent.process({ query: keywords, k: 5 });
-                sources = result.documents as Array<{ content: string;[key: string]: unknown }>;
+                sources = result.documents as Array<{ content: string; metadata?: Record<string, unknown>; distance?: number }>;
                 context = sources.map((doc) => doc.content).join('\n\n');
             } catch (error) {
                 console.error("RAG Retrieval failed:", error);

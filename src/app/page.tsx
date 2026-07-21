@@ -301,17 +301,17 @@ export default function Home() {
                         <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base">Sources ({message.sources.length})</h3>
                       </div>
                       <div className="space-y-2">
-                        {message.sources.map((source, index) => (
-                          <div key={index} className="bg-white dark:bg-gray-800 rounded-lg p-2 sm:p-3 border border-gray-200 dark:border-gray-600 shadow-sm">
+                          {message.sources.map((source, index) => (
+                          <div key={index} className="bg-white dark:bg-gray-800 rounded-lg p-2 sm:p-3 border border-gray-200 dark:border-gray-600 shadow-sm min-w-0 max-w-full overflow-hidden">
                             <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 mb-1 sm:mb-2" style={{ overflowWrap: 'anywhere', wordBreak: 'break-word' }}>
                                   {source.content ? source.content.substring(0, 150) + (source.content.length > 150 ? '...' : '') : 'No content available'}
                                 </p>
                                 {source.metadata && (
                                   <div className="text-xs text-gray-500 dark:text-gray-400 flex flex-wrap gap-1">
                                     {source.metadata.source && (
-                                      <span className="inline-block bg-gray-100 dark:bg-gray-700 px-1 sm:px-2 py-1 rounded text-xs">
+                                      <span className="inline-block bg-gray-100 dark:bg-gray-700 px-1 sm:px-2 py-1 rounded text-xs max-w-full" style={{ overflowWrap: 'anywhere', wordBreak: 'break-word' }}>
                                         Source: {source.metadata.source}
                                       </span>
                                     )}

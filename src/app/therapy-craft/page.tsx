@@ -14,10 +14,12 @@ import {
     TRIGGERS, EMOTIONAL_STATES, PREDOMINANT_THOUGHTS
 } from '@/definitions/clinical';
 import { PERSONAS } from '@/definitions/personas';
+import { CRAFT_PRESETS } from '@/definitions/presets';
 
 interface Source {
     content: string;
     metadata?: Record<string, unknown>;
+    distance?: number;
 }
 
 export default function TherapyCraftPage() {
@@ -53,6 +55,20 @@ export default function TherapyCraftPage() {
     // New controls
     const [sessionNumber, setSessionNumber] = useState('1');
     const [depth, setDepth] = useState(3);
+
+    // Presets
+    const [presetId, setPresetId] = useState('');
+
+    const selectPreset = (id: string) => {
+        const preset = CRAFT_PRESETS.find(p => p.id === id);
+        if (!preset) return;
+        setPresetId(id);
+        setDemographics(preset.demographics);
+        setClinical(preset.clinical);
+        setTopic(preset.topic);
+        setNotes(preset.notes);
+        setPersonaId(preset.personaId);
+    };
 
     // Helper for multi-select toggle
     const toggleSelection = (
@@ -178,6 +194,36 @@ export default function TherapyCraftPage() {
 
                 {/* LEFT COLUMN: Inputs */}
                 <div className="lg:col-span-5 space-y-6">
+
+                    {/* Quick Patient Presets */}
+                    <section className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700 p-6 rounded-2xl shadow-sm">
+                        <h2 className="flex items-center gap-2 text-xl font-semibold mb-4 text-slate-800 dark:text-slate-100">
+                            <Sparkles className="w-5 h-5 text-amber-500" /> Quick Select
+                        </h2>
+                        <div className="flex flex-wrap gap-2">
+                            {CRAFT_PRESETS.map(p => (
+                                <button
+                                    key={p.id}
+                                    onClick={() => selectPreset(p.id)}
+                                    className={`px-3 py-1.5 text-xs rounded-lg border transition-all text-left leading-tight ${presetId === p.id
+                                        ? 'bg-amber-100 dark:bg-amber-900/30 border-amber-500 text-amber-800 dark:text-amber-200 shadow-sm'
+                                        : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-amber-300 hover:bg-amber-50/50'
+                                        }`}
+                                    title={p.description}
+                                >
+                                    {p.name}
+                                </button>
+                            ))}
+                            {presetId && (
+                                <button
+                                    onClick={() => { setPresetId(''); setDemographics({ ageGroup: '', gender: '', ethnicity: '', occupation: '', education: '' }); setClinical({ diagnosis: [], comorbidities: [], familyHistory: [], triggers: [], emotionalState: '', predominantThoughts: '' }); setTopic(''); setNotes(''); setPersonaId(PERSONAS[0].id); }}
+                                    className="px-3 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-600 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                                >
+                                    Clear
+                                </button>
+                            )}
+                        </div>
+                    </section>
 
                     {/* Persona Selection */}
                     <section className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700 p-6 rounded-2xl shadow-sm">
@@ -531,17 +577,51 @@ export default function TherapyCraftPage() {
                         {/* Sources Footer */}
                         {sources.length > 0 && (
                             <div className="p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 text-sm">
-                                <p className="font-semibold text-slate-600 dark:text-slate-400 mb-2 flex items-center gap-2">
+                                <p className="font-semibold text-slate-600 dark:text-slate-400 mb-3 flex items-center gap-2">
                                     <Stethoscope className="w-4 h-4" /> Referenced Clinical Guidelines ({sources.length})
                                 </p>
-                                <div className="flex gap-2 overflow-x-auto pb-2">
-                                    {sources.map((source, i) => (
-                                        <div key={i} className="flex-shrink-0 w-64 p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm text-xs">
-                                            <p className="line-clamp-2 text-slate-600 dark:text-slate-300 italic">
-                                                &quot;{source.content?.substring(0, 100)}...&quot;
-                                            </p>
-                                        </div>
-                                    ))}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-64 overflow-y-auto overflow-x-hidden">
+                                    {sources.map((source, i) => {
+                                        const title = source.metadata?.title as string || '';
+                                        const category = source.metadata?.category as string || '';
+                                        const sourceLabel = source.metadata?.source as string || '';
+                                        const score = source.distance != null ? Math.round((1 - source.distance) * 100) : 0;
+                                        return (
+                                            <div key={i} className="p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm text-xs space-y-1.5 min-w-0 max-w-full overflow-hidden">
+                                                {title && (
+                                                    <p className="font-semibold text-slate-800 dark:text-slate-200" style={{ overflowWrap: 'anywhere', wordBreak: 'break-word' }}>
+                                                        {title}
+                                                    </p>
+                                                )}
+                                                {source.distance != null && (
+                                                    <span className="flex items-center gap-1 text-slate-400" title={`Relevance: ${score}%`}>
+                                                        <div className="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                                            <div
+                                                                className={`h-full rounded-full ${score > 75 ? 'bg-emerald-500' : score > 50 ? 'bg-amber-500' : 'bg-slate-400'}`}
+                                                                style={{ width: `${score}%` }}
+                                                            />
+                                                        </div>
+                                                        <span className="text-[10px] font-medium">{score}%</span>
+                                                    </span>
+                                                )}
+                                                <div className="flex gap-1.5 flex-wrap">
+                                                    {category && (
+                                                        <span className="px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium leading-tight">
+                                                            {category}
+                                                        </span>
+                                                    )}
+                                                    {sourceLabel && (
+                                                        <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 leading-tight">
+                                                            {sourceLabel}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="text-slate-600 dark:text-slate-400 leading-relaxed break-words line-clamp-3">
+                                                    {source.content?.substring(0, 200)}
+                                                </p>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         )}
