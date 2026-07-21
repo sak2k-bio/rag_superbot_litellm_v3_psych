@@ -23,6 +23,17 @@ CORS_ALLOW_CREDENTIALS=true
 # Health Check Configuration
 HEALTH_CHECK_INTERVAL=30
 
+# Fallback API Keys (Optional - for OpenRouter -> Mistral -> Gemini chain)
+# OPENROUTER_API_KEY=your_openrouter_key_here
+# OPENROUTER_API_KEY_2=
+# OPENROUTER_API_KEY_3=
+# MISTRAL_API_KEY=your_mistral_key_here
+# MISTRAL_API_KEY_2=
+# MISTRAL_API_KEY_3=
+# GEMINI_API_KEY=your_gemini_key_here
+# GEMINI_API_KEY_2=
+# GEMINI_API_KEY_3=
+
 # Set these via Railway CLI:
 # railway variables set ONEMINAI_API_KEY=your_key_here
 # railway variables set FASTAPI_HOST=0.0.0.0

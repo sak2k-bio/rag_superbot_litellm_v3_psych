@@ -35,7 +35,7 @@ function addCORSHeaders(response, env) {
 }
 
 // Make request to 1minAI API
-async function make1minAIRequest(messages, model, temperature = 0.7, maxTokens = null, env) {
+async function make1minAIRequest(messages, model, _temperature = 0.7, _maxTokens = null, env) {
     const ONEMINAI_API_KEY = env.ONEMINAI_API_KEY;
 
     if (!ONEMINAI_API_KEY) {
@@ -212,8 +212,8 @@ function getAvailableModels() {
 }
 
 // Main request handler
-export default {
-    async fetch(request, env, ctx) {
+const worker = {
+    async fetch(request, env, _ctx) {
         // Handle CORS preflight
         const corsResponse = handleCORS(request, env);
         if (corsResponse) return corsResponse;
@@ -347,3 +347,5 @@ export default {
         }
     },
 };
+
+export default worker;

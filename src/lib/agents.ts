@@ -13,6 +13,8 @@ const GEMINI_MAX_TOKENS = parseInt(process.env.NEXT_PUBLIC_GEMINI_MAX_TOKENS || 
 // LiteLLM Configuration
 const USE_LITELLM = process.env.NEXT_PUBLIC_USE_LITELLM === 'true';
 const LITELLM_MODEL = process.env.NEXT_PUBLIC_LITELLM_MODEL || 'mistral-small-latest';
+const LITELLM_TEMPERATURE = parseFloat(process.env.NEXT_PUBLIC_LITELLM_TEMPERATURE || '0.7');
+const LITELLM_MAX_TOKENS = parseInt(process.env.NEXT_PUBLIC_LITELLM_MAX_TOKENS || '2048');
 
 // Initialize Google AI (fallback only)
 const genAI = GOOGLE_API_KEY ? new GoogleGenerativeAI(GOOGLE_API_KEY) : null;
@@ -20,7 +22,7 @@ const genAI = GOOGLE_API_KEY ? new GoogleGenerativeAI(GOOGLE_API_KEY) : null;
 // Base Agent interface
 export interface Agent {
   name: string;
-  process(input: any): Promise<any>;
+  process(input: unknown): Promise<unknown>;
 }
 
 // Thinking step interface
@@ -29,7 +31,7 @@ export interface ThinkingStep {
   step: string;
   status: 'processing' | 'completed' | 'error';
   message: string;
-  details?: any;
+  details?: Record<string, unknown>;
 }
 
 // Query Agent
@@ -86,7 +88,7 @@ export class QueryAgent implements Agent {
 export class RetrievalAgent implements Agent {
   name = 'RetrievalAgent';
 
-  async process(input: { query: string; k?: number }): Promise<{ documents: any[]; thinkingSteps: ThinkingStep[] }> {
+  async process(input: { query: string; k?: number }): Promise<{ documents: Record<string, unknown>[]; thinkingSteps: ThinkingStep[] }> {
     const thinkingSteps: ThinkingStep[] = [];
 
     try {
@@ -126,7 +128,7 @@ export class RetrievalAgent implements Agent {
 export class AnswerAgent implements Agent {
   name = 'AnswerAgent';
 
-  async process(input: { query: string; documents: any[] }): Promise<{ answer: string; thinkingSteps: ThinkingStep[] }> {
+  async process(input: { query: string; documents: Record<string, unknown>[] }): Promise<{ answer: string; thinkingSteps: ThinkingStep[] }> {
     const thinkingSteps: ThinkingStep[] = [];
 
     try {
@@ -184,8 +186,8 @@ Answer:`;
         console.log("🚀 Using LiteLLM proxy for answer generation...");
         const response = await generateTextCompletion(prompt, {
           model: LITELLM_MODEL,
-          temperature: GEMINI_TEMPERATURE,
-          maxTokens: GEMINI_MAX_TOKENS,
+          temperature: LITELLM_TEMPERATURE,
+          maxTokens: LITELLM_MAX_TOKENS,
         });
         console.log("✅ LiteLLM response received successfully");
         return response;
@@ -240,7 +242,7 @@ Answer:`;
 export class CriticAgent implements Agent {
   name = 'CriticAgent';
 
-  async process(input: { query: string; answer: string; documents: any[] }): Promise<{ critique: string; score: number; thinkingSteps: ThinkingStep[] }> {
+  async process(input: { query: string; answer: string; documents: Record<string, unknown>[] }): Promise<{ critique: string; score: number; thinkingSteps: ThinkingStep[] }> {
     const thinkingSteps: ThinkingStep[] = [];
 
     try {
@@ -275,7 +277,7 @@ export class CriticAgent implements Agent {
     }
   }
 
-  private evaluateAnswer(query: string, answer: string, documents: any[]): string {
+  private evaluateAnswer(query: string, answer: string, documents: Record<string, unknown>[]): string {
     const critiques = [];
 
     if (answer.length < 50) {
@@ -297,7 +299,7 @@ export class CriticAgent implements Agent {
     return critiques.join("; ");
   }
 
-  private calculateScore(query: string, answer: string, documents: any[]): number {
+  private calculateScore(query: string, answer: string, documents: Record<string, unknown>[]): number {
     let score = 5; // Base score
 
     if (answer.length > 100) score += 1;
@@ -313,7 +315,7 @@ export class CriticAgent implements Agent {
 export class RefineAgent implements Agent {
   name = 'RefineAgent';
 
-  async process(input: { query: string; answer: string; critique: string; documents: any[] }): Promise<{ refinedAnswer: string; thinkingSteps: ThinkingStep[] }> {
+  async process(input: { query: string; answer: string; critique: string; documents: Record<string, unknown>[] }): Promise<{ refinedAnswer: string; thinkingSteps: ThinkingStep[] }> {
     const thinkingSteps: ThinkingStep[] = [];
 
     try {
@@ -351,7 +353,7 @@ export class RefineAgent implements Agent {
     }
   }
 
-  private async refineAnswer(query: string, answer: string, critique: string, documents: any[]): Promise<string> {
+  private async refineAnswer(query: string, answer: string, critique: string, documents: Record<string, unknown>[]): Promise<string> {
     const refinementPrompt = `Please refine the following answer based on the critique provided. Make it more comprehensive and accurate.
 
 Original Query: ${query}
@@ -370,8 +372,8 @@ Refined Answer:`;
         console.log("🚀 Using LiteLLM proxy for answer refinement...");
         const response = await generateTextCompletion(refinementPrompt, {
           model: LITELLM_MODEL,
-          temperature: GEMINI_TEMPERATURE,
-          maxTokens: GEMINI_MAX_TOKENS,
+          temperature: LITELLM_TEMPERATURE,
+          maxTokens: LITELLM_MAX_TOKENS,
         });
         console.log("✅ LiteLLM refinement response received successfully");
         return response;

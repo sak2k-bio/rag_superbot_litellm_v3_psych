@@ -8,7 +8,7 @@ export interface Pipeline {
     answer: string;
     thinkingSteps: ThinkingStep[];
     pipelineInfo: string;
-    sources?: any[];
+    sources?: Record<string, unknown>[];
   }>;
 }
 
@@ -20,10 +20,10 @@ export class Phase1Pipeline implements Pipeline {
     answer: string;
     thinkingSteps: ThinkingStep[];
     pipelineInfo: string;
-    sources?: any[];
+    sources?: Record<string, unknown>[];
   }> {
     const allThinkingSteps: ThinkingStep[] = [];
-    
+
     try {
       // Step 1: Query Processing
       const queryAgent = new QueryAgent();
@@ -31,14 +31,14 @@ export class Phase1Pipeline implements Pipeline {
       allThinkingSteps.push(...queryResult.thinkingSteps);
 
       let answer = "I'm not sure how to answer that.";
-      let documents: any[] = [];
+      let documents: Record<string, unknown>[] = [];
 
       // Step 2: Retrieval (if needed)
       if (queryResult.needsRetrieval) {
         const retrievalAgent = new RetrievalAgent();
-        const retrievalResult = await retrievalAgent.process({ 
-          query: queryResult.processedQuery, 
-          k: 3 
+        const retrievalResult = await retrievalAgent.process({
+          query: queryResult.processedQuery,
+          k: 3
         });
         allThinkingSteps.push(...retrievalResult.thinkingSteps);
         documents = retrievalResult.documents;
@@ -46,9 +46,9 @@ export class Phase1Pipeline implements Pipeline {
 
       // Step 3: Answer Generation
       const answerAgent = new AnswerAgent();
-      const answerResult = await answerAgent.process({ 
-        query: queryResult.processedQuery, 
-        documents 
+      const answerResult = await answerAgent.process({
+        query: queryResult.processedQuery,
+        documents
       });
       allThinkingSteps.push(...answerResult.thinkingSteps);
       answer = answerResult.answer;
@@ -67,7 +67,7 @@ export class Phase1Pipeline implements Pipeline {
         message: `Pipeline error: ${error}`,
         details: { error: error instanceof Error ? error.message : 'Unknown error' }
       });
-      
+
       return {
         answer: "I encountered an error while processing your request. Please try again.",
         thinkingSteps: allThinkingSteps,
@@ -86,10 +86,10 @@ export class Phase2Pipeline implements Pipeline {
     answer: string;
     thinkingSteps: ThinkingStep[];
     pipelineInfo: string;
-    sources?: any[];
+    sources?: Record<string, unknown>[];
   }> {
     const allThinkingSteps: ThinkingStep[] = [];
-    
+
     try {
       // Step 1: Query Processing
       const queryAgent = new QueryAgent();
@@ -97,14 +97,14 @@ export class Phase2Pipeline implements Pipeline {
       allThinkingSteps.push(...queryResult.thinkingSteps);
 
       let answer = "I'm not sure how to answer that.";
-      let documents: any[] = [];
+      let documents: Record<string, unknown>[] = [];
 
       // Step 2: Retrieval (if needed)
       if (queryResult.needsRetrieval) {
         const retrievalAgent = new RetrievalAgent();
-        const retrievalResult = await retrievalAgent.process({ 
-          query: queryResult.processedQuery, 
-          k: 5 
+        const retrievalResult = await retrievalAgent.process({
+          query: queryResult.processedQuery,
+          k: 5
         });
         allThinkingSteps.push(...retrievalResult.thinkingSteps);
         documents = retrievalResult.documents;
@@ -112,30 +112,30 @@ export class Phase2Pipeline implements Pipeline {
 
       // Step 3: Answer Generation
       const answerAgent = new AnswerAgent();
-      const answerResult = await answerAgent.process({ 
-        query: queryResult.processedQuery, 
-        documents 
+      const answerResult = await answerAgent.process({
+        query: queryResult.processedQuery,
+        documents
       });
       allThinkingSteps.push(...answerResult.thinkingSteps);
       answer = answerResult.answer;
 
       // Step 4: Answer Evaluation
       const criticAgent = new CriticAgent();
-      const critiqueResult = await criticAgent.process({ 
-        query: queryResult.processedQuery, 
-        answer, 
-        documents 
+      const critiqueResult = await criticAgent.process({
+        query: queryResult.processedQuery,
+        answer,
+        documents
       });
       allThinkingSteps.push(...critiqueResult.thinkingSteps);
 
       // If score is low, try to improve
       if (critiqueResult.score < 7) {
         const refineAgent = new RefineAgent();
-        const refineResult = await refineAgent.process({ 
-          query: queryResult.processedQuery, 
-          answer, 
-          critique: critiqueResult.critique, 
-          documents 
+        const refineResult = await refineAgent.process({
+          query: queryResult.processedQuery,
+          answer,
+          critique: critiqueResult.critique,
+          documents
         });
         allThinkingSteps.push(...refineResult.thinkingSteps);
         answer = refineResult.refinedAnswer;
@@ -155,7 +155,7 @@ export class Phase2Pipeline implements Pipeline {
         message: `Pipeline error: ${error}`,
         details: { error: error instanceof Error ? error.message : 'Unknown error' }
       });
-      
+
       return {
         answer: "I encountered an error while processing your request. Please try again.",
         thinkingSteps: allThinkingSteps,
@@ -174,10 +174,10 @@ export class Phase3Pipeline implements Pipeline {
     answer: string;
     thinkingSteps: ThinkingStep[];
     pipelineInfo: string;
-    sources?: any[];
+    sources?: Record<string, unknown>[];
   }> {
     const allThinkingSteps: ThinkingStep[] = [];
-    
+
     try {
       // Step 1: Query Processing
       const queryAgent = new QueryAgent();
@@ -185,14 +185,14 @@ export class Phase3Pipeline implements Pipeline {
       allThinkingSteps.push(...queryResult.thinkingSteps);
 
       let answer = "I'm not sure how to answer that.";
-      let documents: any[] = [];
+      let documents: Record<string, unknown>[] = [];
 
       // Step 2: Retrieval (if needed)
       if (queryResult.needsRetrieval) {
         const retrievalAgent = new RetrievalAgent();
-        const retrievalResult = await retrievalAgent.process({ 
-          query: queryResult.processedQuery, 
-          k: 7 
+        const retrievalResult = await retrievalAgent.process({
+          query: queryResult.processedQuery,
+          k: 7
         });
         allThinkingSteps.push(...retrievalResult.thinkingSteps);
         documents = retrievalResult.documents;
@@ -200,9 +200,9 @@ export class Phase3Pipeline implements Pipeline {
 
       // Step 3: Answer Generation
       const answerAgent = new AnswerAgent();
-      const answerResult = await answerAgent.process({ 
-        query: queryResult.processedQuery, 
-        documents 
+      const answerResult = await answerAgent.process({
+        query: queryResult.processedQuery,
+        documents
       });
       allThinkingSteps.push(...answerResult.thinkingSteps);
       answer = answerResult.answer;
@@ -214,10 +214,10 @@ export class Phase3Pipeline implements Pipeline {
 
       while (iteration < maxIterations) {
         const criticAgent = new CriticAgent();
-        const critiqueResult = await criticAgent.process({ 
-          query: queryResult.processedQuery, 
-          answer: currentAnswer, 
-          documents 
+        const critiqueResult = await criticAgent.process({
+          query: queryResult.processedQuery,
+          answer: currentAnswer,
+          documents
         });
         allThinkingSteps.push(...critiqueResult.thinkingSteps);
 
@@ -226,11 +226,11 @@ export class Phase3Pipeline implements Pipeline {
         }
 
         const refineAgent = new RefineAgent();
-        const refineResult = await refineAgent.process({ 
-          query: queryResult.processedQuery, 
-          answer: currentAnswer, 
-          critique: critiqueResult.critique, 
-          documents 
+        const refineResult = await refineAgent.process({
+          query: queryResult.processedQuery,
+          answer: currentAnswer,
+          critique: critiqueResult.critique,
+          documents
         });
         allThinkingSteps.push(...refineResult.thinkingSteps);
         currentAnswer = refineResult.refinedAnswer;
@@ -253,7 +253,7 @@ export class Phase3Pipeline implements Pipeline {
         message: `Pipeline error: ${error}`,
         details: { error: error instanceof Error ? error.message : 'Unknown error' }
       });
-      
+
       return {
         answer: "I encountered an error while processing your request. Please try again.",
         thinkingSteps: allThinkingSteps,
@@ -272,14 +272,14 @@ export class AutoPipeline implements Pipeline {
     answer: string;
     thinkingSteps: ThinkingStep[];
     pipelineInfo: string;
-    sources?: any[];
+    sources?: Record<string, unknown>[];
   }> {
     const allThinkingSteps: ThinkingStep[] = [];
-    
+
     try {
       // Analyze query complexity to select pipeline
       const queryComplexity = this.analyzeQueryComplexity(query);
-      
+
       allThinkingSteps.push({
         agent: 'Pipeline',
         step: 'Pipeline Selection',
@@ -289,7 +289,7 @@ export class AutoPipeline implements Pipeline {
       });
 
       let selectedPipeline: Pipeline;
-      
+
       if (queryComplexity === 'simple') {
         selectedPipeline = new Phase1Pipeline();
       } else if (queryComplexity === 'medium') {
@@ -325,7 +325,7 @@ export class AutoPipeline implements Pipeline {
         step: 'Pipeline Execution',
         status: 'completed',
         message: `${selectedPipeline.name} completed successfully`,
-        details: { 
+        details: {
           selectedPipeline: selectedPipeline.name,
           answerLength: result.answer.length,
           sourcesCount: result.sources?.length || 0
@@ -346,7 +346,7 @@ export class AutoPipeline implements Pipeline {
         message: `Pipeline error: ${error}`,
         details: { error: error instanceof Error ? error.message : 'Unknown error' }
       });
-      
+
       return {
         answer: "I encountered an error while processing your request. Please try again.",
         thinkingSteps: allThinkingSteps,
@@ -358,22 +358,22 @@ export class AutoPipeline implements Pipeline {
 
   private analyzeQueryComplexity(query: string): 'simple' | 'medium' | 'complex' {
     const lowerQuery = query.toLowerCase();
-    
+
     // Simple queries
     if (query.length < 30 && !lowerQuery.includes('?') && !lowerQuery.includes('explain')) {
       return 'simple';
     }
-    
+
     // Complex queries
-    if (query.length > 100 || 
-        lowerQuery.includes('compare') || 
-        lowerQuery.includes('analyze') || 
-        lowerQuery.includes('explain') ||
-        lowerQuery.includes('multiple') ||
-        lowerQuery.split(' ').length > 15) {
+    if (query.length > 100 ||
+      lowerQuery.includes('compare') ||
+      lowerQuery.includes('analyze') ||
+      lowerQuery.includes('explain') ||
+      lowerQuery.includes('multiple') ||
+      lowerQuery.split(' ').length > 15) {
       return 'complex';
     }
-    
+
     return 'medium';
   }
 }
@@ -386,14 +386,14 @@ export class MetaPipeline implements Pipeline {
     answer: string;
     thinkingSteps: ThinkingStep[];
     pipelineInfo: string;
-    sources?: any[];
+    sources?: Record<string, unknown>[];
   }> {
     const allThinkingSteps: ThinkingStep[] = [];
-    
+
     try {
       // Use AI to analyze query and select best approach
       const analysis = await this.analyzeQuery(query);
-      
+
       allThinkingSteps.push({
         agent: 'Pipeline',
         step: 'Meta Analysis',
@@ -403,7 +403,7 @@ export class MetaPipeline implements Pipeline {
       });
 
       let selectedPipeline: Pipeline;
-      
+
       if (analysis.recommendedPipeline === 'phase1') {
         selectedPipeline = new Phase1Pipeline();
       } else if (analysis.recommendedPipeline === 'phase2') {
@@ -417,10 +417,10 @@ export class MetaPipeline implements Pipeline {
         step: 'Meta Analysis',
         status: 'completed',
         message: `Intelligent selection: ${selectedPipeline.name}`,
-        details: { 
-          analysis, 
+        details: {
+          analysis,
           selectedPipeline: selectedPipeline.name,
-          confidence: analysis.confidence 
+          confidence: analysis.confidence
         }
       });
 
@@ -443,7 +443,7 @@ export class MetaPipeline implements Pipeline {
         step: 'Pipeline Execution',
         status: 'completed',
         message: `${selectedPipeline.name} completed successfully`,
-        details: { 
+        details: {
           selectedPipeline: selectedPipeline.name,
           answerLength: result.answer.length,
           sourcesCount: result.sources?.length || 0
@@ -464,7 +464,7 @@ export class MetaPipeline implements Pipeline {
         message: `Pipeline error: ${error}`,
         details: { error: error instanceof Error ? error.message : 'Unknown error' }
       });
-      
+
       return {
         answer: "I encountered an error while processing your request. Please try again.",
         thinkingSteps: allThinkingSteps,
@@ -481,7 +481,7 @@ export class MetaPipeline implements Pipeline {
   }> {
     // Simple heuristic analysis (in a real implementation, this could use AI)
     const lowerQuery = query.toLowerCase();
-    
+
     if (query.length < 50 && !lowerQuery.includes('explain') && !lowerQuery.includes('analyze')) {
       return {
         recommendedPipeline: 'phase1',
@@ -489,7 +489,7 @@ export class MetaPipeline implements Pipeline {
         reasoning: 'Simple query, basic pipeline sufficient'
       };
     }
-    
+
     if (lowerQuery.includes('compare') || lowerQuery.includes('analyze') || query.length > 100) {
       return {
         recommendedPipeline: 'phase3',
@@ -497,7 +497,7 @@ export class MetaPipeline implements Pipeline {
         reasoning: 'Complex query requiring self-refinement'
       };
     }
-    
+
     return {
       recommendedPipeline: 'phase2',
       confidence: 80,

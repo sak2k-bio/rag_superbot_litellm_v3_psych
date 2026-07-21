@@ -131,12 +131,12 @@ timeout: 300000,  // 5 minutes (300,000ms)
 #### Model Configuration
 ```typescript
 // Line 39: Default model
-const DEFAULT_MODEL = 'gemini-2.0-flash-lite';
+const DEFAULT_MODEL = 'mistral-small-latest';
 // Change to: 'gpt-4o', 'claude-3-5-sonnet', etc.
 
 // Line 40-41: Default parameters
 const DEFAULT_TEMPERATURE = 0.7;  // 0.0 = deterministic, 1.0 = creative
-const DEFAULT_MAX_TOKENS = 2048;  // Max response length
+const DEFAULT_MAX_TOKENS = 4096;  // Standard for mistral-small-latest
 ```
 
 ### 2. Google Sheets Integration (`src/lib/google-sheets.ts`)
@@ -306,6 +306,11 @@ NEXT_PUBLIC_OLLAMA_HOST=http://localhost:11434
    NEXT_PUBLIC_COLLECTION_NAME=my_custom_collection
    ```
 
+4. **Customize Model:**
+   ```bash
+   NEXT_PUBLIC_LITELLM_MODEL=mistral-small-latest
+   ```
+
 ---
 
 ## 🔌 API Routes & Security
@@ -438,9 +443,15 @@ console.log('Token usage - Prompt:', usage.prompt_tokens, 'Completion:', usage.c
 - [ ] Switch vector collection → `.env`: `NEXT_PUBLIC_COLLECTION_NAME`
 
 ### Performance
-- [ ] Adjust API timeout → `src/lib/litellm-client.ts` Line 80
+- [ ] Adjust API timeout → `src/lib/litellm-client.ts` Line 110
 - [ ] Change max tokens → `.env`: `NEXT_PUBLIC_GEMINI_MAX_TOKENS`
 - [ ] Modify depth defaults → `src/app/therapy-craft/page.tsx` Line 55
+
+### Maintenance & Quality
+- [ ] **Next.js 15 Compatibility**: Ensure `viewport` remains a separate export in `layout.tsx`.
+- [ ] **Hydration**: Leave `suppressHydrationWarning` on `<body>` to ignore browser extension noise.
+- [ ] **Linting**: Avoid `any` - use `Record<string, unknown>` or specific interfaces.
+- [ ] **Build Check**: Always run `npm run build` before pushing to verify types.
 
 ---
 
@@ -476,4 +487,4 @@ npm run dev
 ---
 
 **Last Updated:** 2026-02-05  
-**Version:** 1.1.0 (Therapy Craft Mode)
+**Version:** 1.2.0 (Next.js 15 & Stability Update)

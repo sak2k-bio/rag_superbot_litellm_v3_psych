@@ -5,6 +5,17 @@
 # Go to your service → Environment tab → Add Environment Variable
 ONEMINAI_API_KEY=your_1minai_api_key_here
 
+# FALLBACK API KEYS (Optional - for OpenRouter -> Mistral -> Gemini chain)
+# OPENROUTER_API_KEY=your_openrouter_key_here
+# OPENROUTER_API_KEY_2=
+# OPENROUTER_API_KEY_3=
+# MISTRAL_API_KEY=your_mistral_key_here
+# MISTRAL_API_KEY_2=
+# MISTRAL_API_KEY_3=
+# GEMINI_API_KEY=your_gemini_key_here
+# GEMINI_API_KEY_2=
+# GEMINI_API_KEY_3=
+
 # PUBLIC VARIABLES (Already defined in render.yaml)
 # These are automatically set by render.yaml:
 # FASTAPI_HOST=0.0.0.0

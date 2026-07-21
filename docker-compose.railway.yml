@@ -26,6 +26,20 @@ services:
       - CORS_ORIGINS=*
       - CORS_ALLOW_CREDENTIALS=true
       - HEALTH_CHECK_INTERVAL=30
+      # Fallback providers (1minAI -> OpenRouter -> Mistral -> Gemini)
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - OPENROUTER_API_KEY_2=${OPENROUTER_API_KEY_2:-}
+      - OPENROUTER_API_KEY_3=${OPENROUTER_API_KEY_3:-}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL:-openai/gpt-4o-mini}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY:-}
+      - MISTRAL_API_KEY_2=${MISTRAL_API_KEY_2:-}
+      - MISTRAL_API_KEY_3=${MISTRAL_API_KEY_3:-}
+      - MISTRAL_MODEL=${MISTRAL_MODEL:-mistral-small-latest}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_API_KEY_2=${GEMINI_API_KEY_2:-}
+      - GEMINI_API_KEY_3=${GEMINI_API_KEY_3:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.0-flash}
       # Railway-specific
       - PORT=${PORT:-8000}
       - RAILWAY_ENVIRONMENT=${RAILWAY_ENVIRONMENT:-production}

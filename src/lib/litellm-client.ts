@@ -107,7 +107,7 @@ export async function generateChatCompletion(
       if (axiosError.response?.status === 500) {
         const errorData = axiosError.response.data as any;
         throw new Error(
-          `LiteLLM proxy error: ${errorData?.detail || 'Internal server error'}. Check if ONEMINAI_API_KEY is configured.`
+          `LiteLLM proxy error: ${errorData?.detail || 'Internal server error'}. Check proxy configuration and fallback API keys.`
         );
       }
 

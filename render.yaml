@@ -36,6 +36,25 @@ services:
         value: "true"
       - key: HEALTH_CHECK_INTERVAL
         value: "30"
+      # Fallback providers (optional secrets - set in Render dashboard)
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY_2
+        sync: false
+      - key: OPENROUTER_API_KEY_3
+        sync: false
+      - key: MISTRAL_API_KEY
+        sync: false
+      - key: MISTRAL_API_KEY_2
+        sync: false
+      - key: MISTRAL_API_KEY_3
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY_2
+        sync: false
+      - key: GEMINI_API_KEY_3
+        sync: false
       # Secret environment variables (set in Render dashboard)
       - key: ONEMINAI_API_KEY
         sync: false  # This will be set as a secret in Render dashboard
